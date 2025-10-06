@@ -1,0 +1,31 @@
+const axios = require("axios");
+
+async function scrapeTikTok(url) {
+  try {
+    const res = await axios.post(
+      "https://downloader.bot/api/tiktok/info",
+      { url },
+      {
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = res.data.data;
+
+    return {
+      username: data.nick,
+      title: data.video_info,
+      thumbnail: data.video_img,
+      video: data.mp4,
+      audio: data.mp3,
+      timestamp: data.video_date,
+    };
+  } catch (err) {
+    console.error("Error:", err.response?.status, err.response?.data || err.message);
+  }
+}
+
+scrapeTikTok("https://vt.tiktok.com/ZSULcaoW7").then(console.log);
