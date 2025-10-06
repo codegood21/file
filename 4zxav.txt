@@ -1,0 +1,39 @@
+const axios = require("axios");
+
+async function capcutDownloader(url) {
+  try {
+    const headers = {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json"
+    };
+
+    const body = { url };
+    const res = await axios.post("https://3bic.com/api/download", body, { headers });
+    const data = res.data;
+
+    if (!data || data.code !== 200) {
+      throw new Error("Failed to fetch download data");
+    }
+
+    return {
+      status: true,
+      result: {
+        title: data.title,
+        author: data.authorName,
+        video: "https://3bic.com" + data.originalVideoUrl,
+        thumbnail: data.coverUrl
+      }
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error.message
+    };
+  }
+}
+
+(async () => {
+  const url = "https://www.capcut.com/tv2/ZSU8rqrry/";
+  const result = await capcutDownloader(url);
+  console.log(result);
+})();
