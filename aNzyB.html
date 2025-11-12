@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+    <script>
+        // PENTING: Clear form saat page load untuk prevent auto-fill
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            // Disable autocomplete
+            document.getElementById('email').setAttribute('autocomplete', 'off');
+            document.getElementById('password').setAttribute('autocomplete', 'off');
+        });
+    </script>
+</head>
+
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Social Login Buttons -->
+        <div class="social-buttons">
+            <button type="button" class="social-btn google" id="googleBtn">
+                <svg viewBox="0 0 24 24" fill="none">
+                    <path fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                Google
+            </button>
+            <button type="button" class="social-btn github" id="githubBtn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.001 12.001 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                GitHub
+            </button>
+        </div>
+
+        <div class="divider">
+            <span>atau</span>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p class="register-link">Belum punya akun? <a href="daftar.html" id="registerBtn">Daftar di sini</a></p>
+        <p class="admin-link">Admin? <a href="#" id="adminLoginBtn">Masuk sebagai Admin <span
+                    class="admin-badge">DEMO</span></a>
+        </p>
+        <p class="forgot-password-link"><a href="#" id="forgotPasswordLink">Lupa Password?</a></p>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-key"></i>
+                <h3>Reset Password</h3>
+                <button class="modal-close" id="closeForgotModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="forgotStep1" class="forgot-step">
+                    <p class="modal-subtitle">Masukkan email Anda untuk menerima kode reset</p>
+                    <input type="email" id="forgotEmail" class="modal-input" placeholder="Masukkan email Anda" autocomplete="off">
+                    <small class="modal-hint">Kami akan mengirimkan kode reset ke email Anda</small>
+                </div>
+
+                <div id="forgotStep2" class="forgot-step" style="display: none;">
+                    <p class="modal-subtitle">Kode reset telah dikirim ke email Anda</p>
+                    <div class="reset-code-box">
+                        <div id="resetCode" class="reset-code">123456</div>
+                        <button class="btn-copy" id="copyCodeBtn">
+                            <i class="fas fa-copy"></i> Salin Kode
+                        </button>
+                    </div>
+                    <p class="code-info">Gunakan kode ini untuk mereset password Anda</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelForgotBtn">Batal</button>
+                <button class="btn-primary" id="sendCodeBtn">Kirim Kode</button>
+                <button class="btn-primary" id="resetPasswordBtn" style="display: none;">Reset Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <script>
+        // Google API Keys (Gunakan salah satu)
+        const GOOGLE_API_KEYS = [
+            'AIzaSyCrlohrjmdP4RdseT9S1Gl5wyz2pNqLn8A',
+            'AIzaSyD6spAlkpH00OgwUdELP3RE0yf17XJierk',
+            'AIzaSyAnPbOBQeNIejtyT4fBZKNNDNWut1cPlV0',
+            'AIzaSyAkUYfon1uMMs9KvOtST74Voarkz2yayEk'
+        ];
+        
+        let currentApiKeyIndex = 0;
+
+        // Get current API key
+        function getCurrentApiKey() {
+            return GOOGLE_API_KEYS[currentApiKeyIndex];
+        }
+
+        // Switch to next API key if current fails
+        function switchToNextApiKey() {
+            currentApiKeyIndex = (currentApiKeyIndex + 1) % GOOGLE_API_KEYS.length;
+            console.log(`🔄 Switched to API key ${currentApiKeyIndex + 1}:`, getCurrentApiKey());
+        }
+
+        // Initialize Google Sign-In
+        function initializeGoogleSignIn() {
+            try {
+                google.accounts.id.initialize({
+                    client_id: getCurrentApiKey(),
+                    callback: handleGoogleSignIn,
+                    auto_select: false,
+                    itp_support: true
+                });
+
+                console.log('✅ Google Sign-In initialized with API key:', getCurrentApiKey());
+            } catch (error) {
+                console.error('❌ Failed to initialize Google Sign-In:', error);
+                switchToNextApiKey();
+                // Retry with next API key
+                setTimeout(initializeGoogleSignIn, 1000);
+            }
+        }
+
+        // Handle Google Sign-In response
+        function handleGoogleSignIn(response) {
+            if (response.credential) {
+                try {
+                    // Decode JWT token
+                    const base64Url = response.credential.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(
+                        atob(base64)
+                            .split('')
+                            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                            .join('')
+                    );
+
+                    const data = JSON.parse(jsonPayload);
+
+                    console.log('✅ Google Sign-In successful:', {
+                        name: data.name,
+                        email: data.email,
+                        picture: data.picture
+                    });
+
+                    // Clear form
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+
+                    // Set user data
+                    localStorage.setItem('user', JSON.stringify({
+                        name: data.name,
+                        email: data.email,
+                        picture: data.picture,
+                        role: 'user'
+                    }));
+                    localStorage.setItem('isAdmin', 'false');
+                    localStorage.setItem('provider', 'Google');
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+
+                    // Track user online
+                    let onlineUsers = JSON.parse(sessionStorage.getItem('onlineUsers')) || [];
+                    if (!onlineUsers.includes(data.email)) {
+                        onlineUsers.push(data.email);
+                        sessionStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                    }
+
+                    // Save user to users list
+                    let users = JSON.parse(localStorage.getItem('users')) || [];
+                    const userExists = users.some(u => u.email === data.email);
+                    
+                    if (!userExists) {
+                        users.push({
+                            id: Date.now().toString(),
+                            nama: data.name,
+                            email: data.email,
+                            password: 'google-' + data.email,
+                            provider: 'Google',
+                            picture: data.picture,
+                            createdAt: new Date().toISOString()
+                        });
+                        localStorage.setItem('users', JSON.stringify(users));
+                    }
+
+                    // Save login activity
+                    let activities = JSON.parse(localStorage.getItem(`activities_${data.email}`) || '[]');
+                    activities.push({
+                        email: data.email,
+                        name: data.name,
+                        timestamp: new Date().toISOString(),
+                        type: 'login',
+                        provider: 'Google'
+                    });
+                    
+                    if (activities.length > 100) {
+                        activities = activities.slice(-100);
+                    }
+                    localStorage.setItem(`activities_${data.email}`, JSON.stringify(activities));
+
+                    showMessage('✅ Google login berhasil!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+
+                } catch (error) {
+                    console.error('❌ Error processing Google Sign-In:', error);
+                    showMessage('❌ Gagal memproses login Google', 'error');
+                    switchToNextApiKey();
+                }
+            }
+        }
+
+        // Render Google Sign-In button
+        function renderGoogleSignInButton() {
+            try {
+                if (google && google.accounts && google.accounts.id) {
+                    google.accounts.id.renderButton(
+                        document.getElementById('googleSignInContainer'),
+                        {
+                            theme: 'outline',
+                            size: 'large',
+                            text: 'signin_with',
+                            width: '100%'
+                        }
+                    );
+                    console.log('✅ Google Sign-In button rendered');
+                }
+            } catch (error) {
+                console.error('❌ Failed to render Google button:', error);
+            }
+        }
+
+        // Admin Credentials
+        const ADMIN_CREDENTIALS = {
+            email: 'atha@admin.com',
+            password: 'Admin123'
+        };
+
+        // Show message
+        function showMessage(message, type = 'error') {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = message;
+            if (type === 'success') {
+                errorMsg.className = 'error-message show success';
+            } else {
+                errorMsg.className = 'error-message show';
+            }
+        }
+
+        // Debug: Show registered users
+        function debugUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            console.log('Registered users:', users);
+            return users;
+        }
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const btn = this.querySelector('.btn');
+
+            if (!email || !password) {
+                showMessage('❌ Email dan password harus diisi', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+
+            setTimeout(() => {
+                // Cek admin
+                if (email === ADMIN_CREDENTIALS.email.toLowerCase() && password === ADMIN_CREDENTIALS.password) {
+                    // CLEAR form SEBELUM set localStorage
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    localStorage.setItem('user', JSON.stringify({
+                        name: 'Administrator',
+                        email: email,
+                        role: 'admin'
+                    }));
+                    localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('provider', 'Admin');
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+
+                    console.log('✅ Admin login successful');
+                    showMessage('✅ Login admin berhasil!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 500);
+                    return;
+                }
+
+                // Cek user terdaftar
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                console.log('Login attempt:', { email });
+
+                const user = users.find(u => {
+                    const userEmailLower = u.email.toLowerCase();
+                    const isEmailMatch = userEmailLower === email;
+                    const isPasswordMatch = u.password === password;
+                    return isEmailMatch && isPasswordMatch;
+                });
+
+                if (user) {
+                    console.log('✅ User found:', user.email);
+                    
+                    // CLEAR form SEBELUM set localStorage
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                    
+                    localStorage.setItem('user', JSON.stringify({
+                        id: user.id,
+                        name: user.nama,
+                        email: user.email,
+                        role: 'user',
+                        provider: user.provider || 'Email'
+                    }));
+                    localStorage.setItem('isAdmin', 'false');
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+
+                    // Track user sebagai online
+                    let onlineUsers = JSON.parse(sessionStorage.getItem('onlineUsers')) || [];
+                    if (!onlineUsers.includes(user.email)) {
+                        onlineUsers.push(user.email);
+                        sessionStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                    }
+
+                    // Save login activity
+                    let activities = JSON.parse(localStorage.getItem(`activities_${user.email}`) || '[]');
+                    activities.push({
+                        email: user.email,
+                        name: user.nama,
+                        timestamp: new Date().toISOString(),
+                        type: 'login'
+                    });
+                    
+                    if (activities.length > 100) {
+                        activities = activities.slice(-100);
+                    }
+                    localStorage.setItem(`activities_${user.email}`, JSON.stringify(activities));
+
+                    showMessage('✅ Login berhasil!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+                } else {
+                    showMessage('❌ Email atau password salah', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }
+            }, 800);
+        });
+
+        // Admin login button
+        document.getElementById('adminLoginBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('email').value = ADMIN_CREDENTIALS.email;
+            document.getElementById('password').value = ADMIN_CREDENTIALS.password;
+            showMessage('📝 Credentials admin terisi. Klik Login!', 'success');
+        });
+
+        // Google login
+        document.getElementById('googleBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showMessage('🔄 Connecting to Google...', 'success');
+
+            setTimeout(() => {
+                localStorage.setItem('user', JSON.stringify({
+                    name: 'Google User',
+                    email: 'user@gmail.com',
+                    role: 'user'
+                }));
+                localStorage.setItem('isAdmin', 'false');
+                localStorage.setItem('provider', 'Google');
+
+                showMessage('✅ Google login berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 1500);
+        });
+
+        // GitHub login
+        document.getElementById('githubBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            showMessage('🔄 Connecting to GitHub...', 'success');
+
+            setTimeout(() => {
+                localStorage.setItem('user', JSON.stringify({
+                    name: 'GitHub User',
+                    email: 'user@github.com',
+                    role: 'user'
+                }));
+                localStorage.setItem('isAdmin', 'false');
+                localStorage.setItem('provider', 'GitHub');
+
+                showMessage('✅ GitHub login berhasil!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 1500);
+        });
+
+        // Forgot Password Functions
+        const RESET_CODES = {};
+        const RESET_CODE_EXPIRY = 10 * 60 * 1000; // 10 minutes
+
+        function generateResetCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+            document.getElementById('forgotStep1').style.display = 'block';
+            document.getElementById('forgotStep2').style.display = 'none';
+            document.getElementById('sendCodeBtn').style.display = 'inline-block';
+            document.getElementById('resetPasswordBtn').style.display = 'none';
+            document.getElementById('forgotEmail').value = '';
+            document.getElementById('forgotEmail').focus();
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            document.getElementById('forgotEmail').value = '';
+        }
+
+        function sendResetCode() {
+            const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+            const sendBtn = document.getElementById('sendCodeBtn');
+
+            if (!email) {
+                showMessage('❌ Email tidak boleh kosong', 'error');
+                return;
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                showMessage('❌ Format email tidak valid', 'error');
+                return;
+            }
+
+            // Check if email exists
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userExists = users.some(u => u.email.toLowerCase() === email);
+
+            if (!userExists && email !== 'atha@admin.com') {
+                showMessage('❌ Email tidak terdaftar', 'error');
+                return;
+            }
+
+            // Generate reset code
+            const resetCode = generateResetCode();
+            RESET_CODES[email] = {
+                code: resetCode,
+                expiresAt: Date.now() + RESET_CODE_EXPIRY,
+                attempts: 0
+            };
+
+            console.log('✅ Reset code generated:', {
+                email: email,
+                code: resetCode,
+                expiresIn: '10 minutes'
+            });
+
+            // Show step 2
+            document.getElementById('forgotStep1').style.display = 'none';
+            document.getElementById('forgotStep2').style.display = 'block';
+            document.getElementById('resetCode').textContent = resetCode;
+            document.getElementById('sendCodeBtn').style.display = 'none';
+            document.getElementById('resetPasswordBtn').style.display = 'inline-block';
+
+            showMessage(`✅ Kode reset telah dikirim ke ${email}`, 'success');
+        }
+
+        function copyResetCode() {
+            const code = document.getElementById('resetCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showMessage('✅ Kode berhasil disalin!', 'success');
+            }).catch(() => {
+                showMessage('❌ Gagal menyalin kode', 'error');
+            });
+        }
+
+        function resetPasswordWithCode() {
+            const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+            const resetBtn = document.getElementById('resetPasswordBtn');
+
+            if (!RESET_CODES[email]) {
+                showMessage('❌ Kode reset tidak ditemukan', 'error');
+                return;
+            }
+
+            const resetData = RESET_CODES[email];
+
+            // Check expiry
+            if (Date.now() > resetData.expiresAt) {
+                delete RESET_CODES[email];
+                showMessage('❌ Kode reset sudah kadaluarsa', 'error');
+                closeForgotPasswordModal();
+                return;
+            }
+
+            // Create new temporary password
+            const tempPassword = Math.random().toString(36).slice(-8).toUpperCase();
+
+            // Update user password
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            let updated = false;
+
+            if (email === 'atha@admin.com') {
+                console.log('✅ Admin password reset to:', tempPassword);
+                showMessage(`✅ Password admin direset ke: ${tempPassword}\n\nGunakan password ini untuk login`, 'success');
+                updated = true;
+            } else {
+                const userIndex = users.findIndex(u => u.email.toLowerCase() === email);
+                if (userIndex !== -1) {
+                    users[userIndex].password = tempPassword;
+                    users[userIndex].passwordResetAt = new Date().toISOString();
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    console.log('✅ User password reset:', {
+                        email: email,
+                        tempPassword: tempPassword
+                    });
+                    
+                    showMessage(`✅ Password berhasil direset!\n\nPassword baru: ${tempPassword}\n\nGunakan password ini untuk login`, 'success');
+                    updated = true;
+                }
+            }
+
+            if (updated) {
+                // Clean up
+                delete RESET_CODES[email];
+                
+                setTimeout(() => {
+                    closeForgotPasswordModal();
+                    document.getElementById('email').value = email;
+                    document.getElementById('password').value = tempPassword;
+                }, 2000);
+            } else {
+                showMessage('❌ User tidak ditemukan', 'error');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            openForgotPasswordModal();
+        });
+
+        document.getElementById('closeForgotModal').addEventListener('click', closeForgotPasswordModal);
+        document.getElementById('cancelForgotBtn').addEventListener('click', closeForgotPasswordModal);
+        document.getElementById('sendCodeBtn').addEventListener('click', sendResetCode);
+        document.getElementById('copyCodeBtn').addEventListener('click', copyResetCode);
+        document.getElementById('resetPasswordBtn').addEventListener('click', resetPasswordWithCode);
+
+        // Close modal when clicking outside
+        document.getElementById('forgotPasswordModal').addEventListener('click', (e) => {
+            if (e.target.id === 'forgotPasswordModal') {
+                closeForgotPasswordModal();
+            }
+        });
+
+        // Initialize Google Sign-In when page loads
+        window.addEventListener('load', () => {
+            initializeGoogleSignIn();
+        });
+
+        // Fallback if Google SDK doesn't load
+        window.addEventListener('error', () => {
+            console.error('❌ Google SDK failed to load');
+            switchToNextApiKey();
+            // Retry initialization
+            setTimeout(initializeGoogleSignIn, 2000);
+        });
+    </script>
+</body>
+
+</html>
