@@ -1,0 +1,235 @@
+<!doctype html>
+
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GTPS Host — Panel Website</title>
+  <meta name="description" content="Simple frontend untuk website host GTPS: status server, unduh client, kontrol, dan halaman komunitas." />
+  <style>
+    /* Simple modern styling (no external libs) */
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071025 0%, #071827 100%);color:#e6eef8;min-height:100vh}
+    .container{max-width:1100px;margin:36px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#4f46e5);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{margin:0;font-size:20px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:18px}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    .muted{color:var(--muted);font-size:13px}
+    .status{display:flex;align-items:center;gap:10px}
+    .dot{width:12px;height:12px;border-radius:50%}
+    .dot.online{background:limegreen;box-shadow:0 0 8px rgba(0,255,100,0.12)}
+    .dot.offline{background:#ff6b6b}
+    button{background:linear-gradient(90deg,var(--accent),#60a5fa);border:none;padding:10px 12px;border-radius:10px;color:white;cursor:pointer}
+    .small{padding:8px 10px;font-size:13px}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .log{height:220px;overflow:auto;background:var(--glass);padding:10px;border-radius:8px;font-family:monospace;font-size:13px}
+    .section-title{display:flex;justify-content:space-between;align-items:center}
+    input[type=file]{display:none}
+    .uploader{border:2px dashed rgba(255,255,255,0.04);padding:12px;border-radius:8px;text-align:center}
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">GT</div>
+      <div>
+        <h1>GTPS Host — Panel</h1>
+        <div class="muted">Frontend sederhana untuk menampilkan status server, download client, dan kontrol dasar</div>
+      </div>
+    </header><div class="grid">
+  <main>
+    <div class="card">
+      <div class="section-title">
+        <strong>Server Status</strong>
+        <div class="muted">Terakhir diperbarui: <span id="lastUpdated">—</span></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+        <div class="status">
+          <div id="statusDot" class="dot offline"></div>
+          <div>
+            <div id="statusText" style="font-weight:600">Offline</div>
+            <div class="muted" id="playersText">Players: —</div>
+          </div>
+        </div>
+        <div>
+          <button id="refreshBtn" class="small">Refresh</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="startBtn" class="small">Start Server</button>
+        <button id="stopBtn" class="small">Stop Server</button>
+        <button id="restartBtn" class="small">Restart</button>
+        <button id="consoleBtn" class="small">Open Console</button>
+      </div>
+
+      <div style="margin-top:14px">
+        <div class="muted">Server Console</div>
+        <div id="log" class="log">-- console output will appear here --</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="section-title"><strong>File Manager</strong><div class="muted">Upload .wld / configs</div></div>
+      <div style="margin-top:10px;display:flex;gap:12px;align-items:center">
+        <label for="fileUpload" class="uploader" style="cursor:pointer">Klik atau drop file untuk upload<br><small class="muted">(simulation only)</small></label>
+        <input id="fileUpload" type="file" accept="*/*" />
+        <div id="uploadResult" class="muted">Tidak ada file</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="section-title"><strong>Download & Client</strong><div class="muted">Client, patch, mirror</div></div>
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <a id="downloadClient" href="#" download><button class="small">Download Client</button></a>
+        <a id="downloadPatch" href="#" download><button class="small">Download Patch</button></a>
+        <button id="mirrorBtn" class="small">Show Mirrors</button>
+      </div>
+      <div id="mirrors" style="margin-top:10px;display:none">
+        <div class="muted">Mirrors:</div>
+        <ul id="mirrorsList"></ul>
+      </div>
+    </div>
+
+  </main>
+
+  <aside>
+    <div class="card">
+      <strong>Quick Links</strong>
+      <ul style="margin-top:12px">
+        <li><a href="#" class="muted">Dashboard</a></li>
+        <li><a href="#" class="muted">Forum</a></li>
+        <li><a href="#" class="muted">Rules</a></li>
+        <li><a href="#" class="muted">Support</a></li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <strong>Players</strong>
+      <div id="playersList" style="margin-top:10px">Tidak ada pemain online</div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <strong>Community Chat (Demo)</strong>
+      <div style="margin-top:10px">
+        <div id="chatBox" class="log" style="height:160px">-- chat kosong --</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="chatInput" type="text" placeholder="Ketik pesan..." style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit" />
+          <button id="sendChat" class="small">Kirim</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  Dibuat untuk demo GTPS host • Sesuaikan integrasi API server Anda di file index.html
+</footer>
+
+  </div>  <script>
+    // ===== Mock / Frontend logic =====
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const playersText = document.getElementById('playersText');
+    const lastUpdated = document.getElementById('lastUpdated');
+    const log = document.getElementById('log');
+    const playersList = document.getElementById('playersList');
+
+    function appendLog(line){
+      const time = new Date().toLocaleTimeString();
+      log.innerText = `[${time}] ${line}\n` + log.innerText;
+    }
+
+    function setStatus(isOnline, players=0){
+      if(isOnline){
+        statusDot.classList.remove('offline'); statusDot.classList.add('online');
+        statusText.innerText = 'Online';
+      } else {
+        statusDot.classList.remove('online'); statusDot.classList.add('offline');
+        statusText.innerText = 'Offline';
+      }
+      playersText.innerText = 'Players: ' + players;
+      lastUpdated.innerText = new Date().toLocaleString();
+    }
+
+    // Simulate pinging an API endpoint for server status
+    async function fetchServerStatus(){
+      appendLog('Memeriksa status server...');
+      // -----
+      // Ganti bagian ini dengan real fetch ke API server Anda, contoh:
+      // const res = await fetch('/api/status');
+      // const data = await res.json();
+      // setStatus(data.online, data.players);
+      // appendLog('Status diterima dari server');
+      // -----
+
+      // Mock response (random)
+      const online = Math.random() > 0.3;
+      const players = online ? Math.floor(Math.random()*12) : 0;
+      setTimeout(()=>{
+        setStatus(online, players);
+        appendLog('Status: ' + (online? 'ONLINE':'OFFLINE') + (online? (' | players: '+players):''));
+        renderPlayers(players);
+      }, 600);
+    }
+
+    function renderPlayers(count){
+      if(count===0){ playersList.innerText = 'Tidak ada pemain online'; return; }
+      let html = '<ul style="padding-left:16px;margin:0">';
+      for(let i=1;i<=count;i++) html += `<li class=\"muted\">Player${i}</li>`;
+      html += '</ul>';
+      playersList.innerHTML = html;
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', fetchServerStatus);
+    document.getElementById('startBtn').addEventListener('click', ()=>{ appendLog('Perintah: START server'); setStatus(true, Math.floor(Math.random()*6)); });
+    document.getElementById('stopBtn').addEventListener('click', ()=>{ appendLog('Perintah: STOP server'); setStatus(false,0); });
+    document.getElementById('restartBtn').addEventListener('click', ()=>{ appendLog('Perintah: RESTART server'); setStatus(false,0); setTimeout(()=>{ setStatus(true, Math.floor(Math.random()*8)); appendLog('Server berhasil restart'); }, 1500); });
+    document.getElementById('consoleBtn').addEventListener('click', ()=>{ alert('Console: gunakan SSH / screen / tmux untuk akses nyata. Ini hanya demo frontend.'); });
+
+    // File upload (front-end only)
+    const fileUpload = document.getElementById('fileUpload');
+    fileUpload.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      document.getElementById('uploadResult').innerText = `Pilih: ${f.name} (${Math.round(f.size/1024)} KB)`;
+      appendLog('File dipilih: ' + f.name + ' (simulasi upload)');
+      // To actually upload: create FormData and fetch POST to server endpoint
+    });
+
+    // Mirrors
+    document.getElementById('mirrorBtn').addEventListener('click', ()=>{
+      const m = document.getElementById('mirrors');
+      m.style.display = m.style.display === 'none' ? 'block' : 'none';
+      const list = document.getElementById('mirrorsList');
+      list.innerHTML = '<li class="muted">Mirror 1: https://mirror1.example/gtps-client.zip</li><li class="muted">Mirror 2: https://mirror2.example/gtps-client.zip</li>';
+    });
+
+    // Download links (set to example placeholders)
+    document.getElementById('downloadClient').href = '#/downloads/gtps-client.zip';
+    document.getElementById('downloadPatch').href = '#/downloads/patch-v1.0.zip';
+
+    // Chat demo
+    const chatBox = document.getElementById('chatBox');
+    document.getElementById('sendChat').addEventListener('click', sendChat);
+    document.getElementById('chatInput').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') sendChat(); });
+    function sendChat(){
+      const txt = document.getElementById('chatInput').value.trim();
+      if(!txt) return;
+      const t = new Date().toLocaleTimeString();
+      chatBox.innerText = `[You ${t}]: ${txt}\n` + chatBox.innerText;
+      document.getElementById('chatInput').value = '';
+      appendLog('Chat dikirim: ' + txt);
+      // For real-time chat use WebSocket / socket.io to backend
+    }
+
+    // Auto refresh every 45 seconds (demo)
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 45000);
+  </script></body>
+</html>
