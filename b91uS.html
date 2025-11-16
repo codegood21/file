@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chat {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #input {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ChatGPT</h1>
+    <input id="api-key" type="text" placeholder="Masukkan API Key">
+    <div id="chat"></div>
+    <input id="input" type="text" placeholder="Tanya sesuatu...">
+
+    <script>
+        const apiKey = document.getElementById('api-key');
+        const chat = document.getElementById('chat');
+        const input = document.getElementById('input');
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const pertanyaan = input.value;
+                const apiUrl = 'https:                                      
+                fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey.value}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: pertanyaan }]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const jawaban = data.choices[0].message.content;
+                    chat.innerHTML += `<p><b>Anda:</b> ${pertanyaan}</p>`;
+                    chat.innerHTML += `<p><b>ChatGPT:</b> ${jawaban}</p>`;
+                    input.value = '';
+                    chat.scrollTop = chat.scrollHeight;
+                })
+                .catch(error => {
+                    console.error(error);
+                    chat.innerHTML += `<p><b>Error:</b> Gagal mengambil jawaban</p>`;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
