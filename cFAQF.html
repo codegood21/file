@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinta</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background-color: #ffe6f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-image: linear-gradient(to bottom, #ffe6f0, #ffcccc);
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        #iya {
+            background-color: #ff69b4;
+            color: #fff;
+            margin: 10px;
+        }
+        #tidak {
+            background-color: #ccc;
+            color: #666;
+            margin: 10px;
+            position: absolute;
+        }
+        #iya:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        #tidak:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        #pertanyaan {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cinta</h1>
+        <button id="lihat" onclick="tanya()">Klik untuk lihat</button>
+        <div id="pertanyaan" style="display: none;">Maukah kamu jadi pacarku?</div>
+        <button id="iya" style="display: none;" onclick="iya()">Iyaaaa!!</button>
+        <button id="tidak" style="display: none;" onmouseover="hindari()">Gak dulu..</button>
+    </div>
+
+    <script>
+        function tanya() {
+            document.getElementById('lihat').style.display = 'none';
+            document.getElementById('pertanyaan').style.display = 'block';
+            document.getElementById('iya').style.display = 'inline-block';
+            document.getElementById('tidak').style.display = 'inline-block';
+            document.getElementById('tidak').style.position = 'absolute';
+            hindari();
+        }
+
+        function iya() {
+            alert('Yay! Aku cinta kamu!');
+        }
+
+        function hindari() {
+            var tidak = document.getElementById('tidak');
+            var x = Math.random() * (window.innerWidth - tidak.offsetWidth);
+            var y = Math.random() * (window.innerHeight - tidak.offsetHeight);
+            tidak.style.left = x + 'px';
+            tidak.style.top = y + 'px';
+        }
+    </script>
+</body>
+</html>
