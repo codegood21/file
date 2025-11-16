@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #prank {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            font-size: 48px;
+            text-align: center;
+            padding-top: 20%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Klik di sini untuk mendapatkan hadiah!</h1>
+    <button id="klik">Klik Saya!</button>
+    <div id="prank">Kamu telah diprank!</div>
+
+    <script>
+        document.getElementById('klik').addEventListener('click', () => {
+            document.getElementById('prank').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('prank').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
