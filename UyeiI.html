@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unband WhatsApp</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 420px;
+        background: #fff;
+        margin: 40px auto; /* → SUPAYA LEBIH KE TENGAH */
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        background: #1e90ff;
+        border: none;
+        color: white;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .btn:hover {
+        background: #0c6ee6;
+    }
+
+    /* TABEL KE-2 HUBUNGI ADMIN */
+    .admin-box {
+        max-width: 420px;
+        background: #fff;
+        margin: 20px auto; 
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .admin-btn {
+        width: 100%;
+        padding: 14px;
+        background: #0dbf4c;
+        border: none;
+        color: white;
+        border-radius: 12px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .admin-btn:hover {
+        background: #09a23f;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- TABEL UNBAND UTAMA -->
+<div class="container">
+    <h2>Unband WhatsApp</h2>
+
+    <label>Nomor WhatsApp (+62)</label>
+    <input type="text" id="nomor" placeholder="+62xxxxxxxxxx" value="+62">
+
+    <label>Pilih Jenis Ban</label>
+    <select id="jenis">
+        <option value="spam">Ban Spam</option>
+        <option value="permanen">Ban Permanen</option>
+    </select>
+
+    <button class="btn" onclick="kirim()">Start</button>
+</div>
+
+<!-- TABEL HUBUNGI ADMIN -->
+<div class="admin-box">
+    <h3>Hubungi WhatsApp Admin</h3>
+    <button class="admin-btn" onclick="location.href='https://wa.me/6283116920767'">
+        Chat Admin
+    </button>
+</div>
+
+<script>
+function kirim() {
+    let nomor = document.getElementById("nomor").value;
+    let jenis = document.getElementById("jenis").value;
+
+    if (!nomor.startsWith("+62") || nomor.length < 7) {
+        alert("Nomor harus memakai format +62 dan benar!");
+        return;
+    }
+
+    let subject = "Permohonan Unban WhatsApp untuk nomor " + nomor;
+
+    let bodyText = "";
+
+    if (jenis === "spam") {
+        bodyText =
+`Halo Tim WhatsApp,
+
+Saya ingin mengajukan banding terkait nomor ${nomor}.
+Nomor saya terkena BAN SPAM secara tiba-tiba.
+
+Mohon untuk dilakukan peninjauan ulang dan dipulihkan.
+
+Terima kasih.`;
+    } else {
+        bodyText =
+`Halo Tim WhatsApp,
+
+Saya ingin mengajukan banding terkait nomor ${nomor}.
+Nomor saya terkena BAN PERMANEN.
+
+Mohon ditinjau kembali karena saya tidak melakukan pelanggaran.
+
+Terima kasih.`;
+    }
+
+    let mailtoLink =
+        "mailto:support@whatsapp.com?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        encodeURIComponent(bodyText);
+
+    window.location.href = mailtoLink;
+}
+</script>
+
+</body>
+</html>
