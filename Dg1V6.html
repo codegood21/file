@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCodeBoy || Uploader</title>
+    <style>
+        /* --- Import Font (Poppins & Fira Code) --- */
+        /* Menggunakan font Poppins seperti sebelumnya */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap');
+
+        /* --- Global Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* --- [PERUBAHAN WARNA UTAMA] Background & Font Utama --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0D1117; /* GitHub Dark Mode Background (Lebih gelap) */
+            color: #C9D1D9; /* Light Grayish White */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Main Content Wrapper (Holds BOTH cards) --- */
+        .content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        /* --- Card 1: The Uploader --- */
+        /* --- [PERUBAHAN CARD UTAMA] Border & Shadow lebih halus --- */
+        .uploader-card {
+            background: #161B22; /* Card Background */
+            border: 1px solid #30363D; /* Border halus */
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Shadow lebih dalam */
+            text-align: center;
+            width: 100%;
+            max-width: 480px;
+            transition: all 0.3s ease;
+            position: relative; 
+            overflow: hidden;
+        }
+
+        /* --- [PERUBAHAN JUDUL] Gradien & Font lebih bold --- */
+        .uploader-card h1 {
+            font-size: 2.4em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            /* Gradien Biru-Ungu modern */
+            background: linear-gradient(90deg, #58A6FF, #8B949E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .uploader-card .main-subtitle {
+            font-size: 1em;
+            color: #8B949E;
+            margin-bottom: 30px;
+        }
+
+        /* --- Drag & Drop Area --- */
+        /* --- [PERUBAHAN DRAG AREA] Lebih kontras, border neon effect --- */
+        .drag-drop-area {
+            border: 2px dashed #495565;
+            border-radius: 12px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            position: relative;
+        }
+
+        .drag-drop-area.active {
+            border-color: #58A6FF; /* Biru terang saat aktif */
+            background: rgba(88, 166, 255, 0.05);
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.4); /* Neon effect */
+            transform: scale(1.02);
+        }
+
+        /* --- [PERUBAHAN IKON] Menggunakan ikon FontAwesome atau SVG yang lebih generik/modern --- */
+        /* Karena kita tidak bisa mengakses resource eksternal saat ini, kita gunakan placeholder yang lebih modern */
+        .drag-drop-area .icon {
+            /* Hapus background-image yang lama */
+            background-image: none; 
+            /* Gunakan placeholder modern (misalnya, SVG cloud) */
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            display: block;
+            /* Placeholder: Cloud SVG-like style */
+            background-color: #58A6FF;
+            -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.7-20.5 40.6-26.1 61.1-12.4s26.1 40.6 12.4 61.1L120.6 304c-13.7 20.5-40.6 26.1-61.1 12.4S33.4 275.5 47.1 255L143.5 120.6zM320 288c0-17.7-14.3-32-32-32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H288c17.7 0 32-14.3 32-32zm17.5-96.6c-13.7-20.5-40.6-26.1-12.4s-26.1 40.6-12.4 61.1l96.6 134.5c13.7 20.5 40.6 26.1 61.1 12.4s26.1-40.6 12.4-61.1L337.5 191.4z"/></svg>') no-repeat center;
+            mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V256c0 17.7 14.3 32 32 32s32-14.3 32-32V32zM143.5 120.6c13.7-20.5 40.6-26.1 61.1-12.4s26.1 40.6 12.4 61.1L120.6 304c-13.7 20.5-40.6 26.1-61.1 12.4S33.4 275.5 47.1 255L143.5 120.6zM320 288c0-17.7-14.3-32-32-32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H288c17.7 0 32-14.3 32-32zm17.5-96.6c-13.7-20.5-40.6-26.1-12.4s-26.1 40.6-12.4 61.1l96.6 134.5c13.7 20.5 40.6 26.1 61.1 12.4s26.1-40.6 12.4-61.1L337.5 191.4z"/></svg>') no-repeat center;
+        }
+
+
+        .drag-drop-area .text {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #C9D1D9;
+            margin-bottom: 5px;
+        }
+
+        .drag-drop-area .subtext {
+            font-size: 0.85em;
+            color: #8B949E;
+        }
+
+        #file-input {
+            display: none;
+        }
+        
+        .max-size-text {
+            font-size: 0.85em;
+            color: #8B949E;
+            margin-top: 15px;
+        }
+        
+        /* --- Kontainer untuk Spinner & Result --- */
+        .upload-progress-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .loading-spinner {
+            display: none; /* Sembunyi by default */
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(201, 209, 217, 0.1);
+            border-top: 6px solid #58A6FF;
+            border-radius: 50%;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin: 0 auto; /* Tengah horizontal */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Kotak Result Detail (Lebih gelap dan kontras) --- */
+        .result-box-wrapper {
+            display: none; /* Sembunyi by default */
+            background: #0D1117; /* Lebih gelap dari card */
+            border: 1px solid #30363D;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .result-details {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .result-details li {
+            font-size: 0.9em;
+            color: #C9D1D9;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+            display: flex; /* Untuk sejajarkan label dan nilai */
+        }
+        
+        .result-details li:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-details li strong {
+            color: #8B949E; /* Label warna abu-abu */
+            min-width: 110px; 
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        /* [PERUBAHAN UNTUK URL] Memastikan URL dan tombol salin sejajar */
+        .result-url-row {
+            display: flex;
+            align-items: center; /* Untuk menengahkan vertikal link dan tombol */
+            justify-content: space-between;
+            flex-wrap: nowrap; /* Mencegah wrap pada perangkat kecil */
+        }
+        
+        .result-details li .url-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1; 
+            overflow: hidden; /* Sembunyikan jika terlalu panjang */
+        }
+
+        .result-details li a#res-fileurl {
+            color: #58A6FF; /* Biru terang untuk link */
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Tiga titik jika terlalu panjang */
+            margin-left: 5px;
+            margin-right: 10px; /* Jarak dari tombol */
+            max-width: calc(100% - 100px); /* Batasan lebar agar tombol tetap terlihat */
+        }
+        
+        .result-details li a:hover {
+            text-decoration: underline;
+        }
+
+        /* [CSS BARU UNTUK TOMBOL SALIN] */
+        .copy-button {
+            background: #238636; /* Hijau tua */
+            color: #FFFFFF;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.1s ease;
+            white-space: nowrap;
+            flex-shrink: 0; /* Pastikan tombol tidak menyusut */
+        }
+        
+        .copy-button:hover {
+            background: #2EA043; /* Hijau lebih terang saat hover */
+        }
+        
+        .copy-button:active {
+            transform: scale(0.98);
+        }
+
+        .copy-button.copied {
+            background: #3FB950; /* Hijau sukses */
+        }
+
+        /* --- Teks Status (Sukses/Error) --- */
+        .upload-status-text {
+            display: none; /* Sembunyi by default */
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+        }
+        
+        .upload-status-text.success {
+            color: #3FB950; /* Hijau GitHub */
+        }
+        
+        .upload-status-text.error {
+            color: #F85149; /* Merah GitHub */
+        }
+
+
+        /* --- Card 2: The Contact Info --- */
+        /* [PERUBAHAN CSS UNTUK CARD KONTAK] */
+        .contact-card { 
+            background: #161B22;
+            border: 1px solid #30363D;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 480px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .contact-card h3 {
+            color: #58A6FF;
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .contact-details {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .contact-details li {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            color: #C9D1D9;
+        }
+        
+        .contact-details li strong {
+            display: inline-block;
+            min-width: 100px;
+            color: #8B949E;
+            font-weight: 500;
+        }
+        
+        .contact-details li a {
+            color: #58A6FF;
+            text-decoration: none;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        
+        .contact-details li a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Footer --- */
+        /* --- [PERUBAHAN FOOTER] Menambahkan link dukungan --- */
+        .footer {
+            margin-top: 50px;
+            font-size: 0.85em;
+            color: #8B949E;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .footer a {
+            color: #58A6FF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <main class="uploader-card">
+            <h1>iCodeBoy</h1>
+            <p class="main-subtitle">Drag & drop your files here or click to select.</p>
+
+            <label for="file-input" class="drag-drop-area" id="drag-drop-area">
+                <div class="icon"></div>
+                <div class="text">Drag & Drop your file here</div>
+                <div class="subtext">or click to browse</div>
+            </label>
+            
+            <input type="file" id="file-input">
+            
+            <p class="max-size-text">Max file size: 4.5MB</p>
+            
+            <div class="upload-progress-container" id="progress-container">
+                <div class="loading-spinner" id="loading-spinner"></div>
+                
+                <div class="result-box-wrapper" id="result-box-wrapper">
+                    <ul class="result-details">
+                        <li><strong>File Name:</strong> <span id="res-filename"></span></li>
+                        <li><strong>Size:</strong> <span id="res-filesize"></span></li>
+                        <li><strong>Type:</strong> <span id="res-filetype"></span></li>
+                        <li><strong>Upload Date:</strong> <span id="res-filedate"></span></li>
+                        <li class="result-url-row">
+                            <strong>File URL:</strong> 
+                            <div class="url-content">
+                                <a id="res-fileurl" href="#" target="_blank" rel="noopener noreferrer"></a>
+                                <button class="copy-button" id="copy-url-button">Copy URL</button>
+                            </div>
+                        </li>
+                        </ul>
+                </div>
+
+                <p class="upload-status-text" id="upload-status-text"></p>
+            </div>
+            
+        </main>
+
+        <section class="contact-card">
+            <h3>Developer Contact 🧑‍💻</h3>
+            <ul class="contact-details">
+                <li><strong>WhatsApp:</strong> <a href="https://wa.me/6283109105308" target="_blank" rel="noopener noreferrer">6283109105308</a></li>
+                <li><strong>Telegram:</strong> <a href="https://t.me/Bayzu1" target="_blank" rel="noopener noreferrer">@Bayzu1</a></li>
+                <li><strong>WA Group:</strong> <a href="https://chat.whatsapp.com/KRVtWTUmIUEHHjwFD2cg8Q?mode=hqrt2" target="_blank" rel="noopener noreferrer">Join Group</a></li>
+                <li><strong>WA Channel:</strong> <a href="https://whatsapp.com/channel/0029Vb7J6xiId7nONPDYkI2i" target="_blank" rel="noopener noreferrer">Follow Channel</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <footer class="footer">
+        © 2025 iCodeBoy.my.id | Support: <a href="https://i.supaimg.com/a71ae4e0-df25-437a-8f6b-c9389c7b7009.jpg" target="_blank">View Support Image</a>
+    </footer>
+
+    <script>
+        // --- Ambil elemen ---
+        const dragDropArea = document.getElementById('drag-drop-area');
+        const fileInput = document.getElementById('file-input');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        
+        // --- Ambil elemen-elemen result baru ---
+        const resultBoxWrapper = document.getElementById('result-box-wrapper');
+        const uploadStatusText = document.getElementById('upload-status-text');
+        
+        // --- Ambil elemen detail di dalam result box ---
+        const resFilename = document.getElementById('res-filename');
+        const resFilesize = document.getElementById('res-filesize');
+        const resFiletype = document.getElementById('res-filetype');
+        const resFiledate = document.getElementById('res-filedate');
+        const resFileurl = document.getElementById('res-fileurl');
+        
+        // --- [BARU] Ambil tombol salin ---
+        const copyButton = document.getElementById('copy-url-button');
+        
+        
+        const UPLOAD_API_URL = "https://www.clugo.my.id/upload";
+
+        dragDropArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleFileUpload(file);
+        });
+
+        // --- Event Drag & Drop (Tidak berubah) ---
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false); 
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, () => dragDropArea.classList.add('active'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dragDropArea.addEventListener(eventName, () => dragDropArea.classList.remove('active'), false);
+        });
+
+        dragDropArea.addEventListener('drop', (e) => {
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileUpload(file);
+        }, false);
+
+        // --- [FUNGSI BARU] Menyalin URL ---
+        copyButton.addEventListener('click', (e) => {
+            e.preventDefault(); // Mencegah tindakan default li atau a
+            
+            const urlToCopy = resFileurl.href;
+
+            // Gunakan API Clipboard modern
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(urlToCopy).then(() => {
+                    copyButton.textContent = 'Copied!';
+                    copyButton.classList.add('copied');
+                    setTimeout(() => {
+                        copyButton.textContent = 'Copy URL';
+                        copyButton.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy URL to clipboard. Please copy it manually.');
+                });
+            } else {
+                // Fallback untuk browser lama atau non-secure context
+                const tempInput = document.createElement('textarea');
+                tempInput.value = urlToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy URL';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }
+        });
+
+
+        // --- Fungsi Upload Utama (Async/Await dengan Fetch) ---
+        async function handleFileUpload(file) {
+            
+            // 1. Reset UI (Sembunyikan hasil & status lama)
+            resultBoxWrapper.style.display = 'none';    
+            uploadStatusText.style.display = 'none';
+            uploadStatusText.className = 'upload-status-text';
+            // Pastikan tombol salin direset
+            copyButton.textContent = 'Copy URL';
+            copyButton.classList.remove('copied');
+            
+            // 2. Tampilkan Spinner
+            loadingSpinner.style.display = 'block'; 
+
+            // 3. Buat FormData untuk dikirim
+            const formData = new FormData();
+            formData.append("file", file); // Key "file"
+
+            try {
+                // 4. Kirim file menggunakan FETCH
+                const response = await fetch(UPLOAD_API_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // 5. Sembunyikan Spinner
+                loadingSpinner.style.display = 'none';
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Upload failed');
+                }
+                
+                // Cari URL di dalam respon
+                const fileUrl = data.url || (data.result ? data.result.url : null);
+                
+                if (!fileUrl) {
+                    throw new Error("File URL not found in server response.");
+                }
+
+                // 6. Isi detail box
+                resFilename.textContent = file.name;
+                // Ubah ukuran file menjadi format MB jika memungkinkan untuk tampilan yang lebih baik
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                resFilesize.textContent = `${fileSizeMB} MB`;
+                resFiletype.textContent = file.type || "N/A";
+                resFiledate.textContent = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+                
+                // Teks URL yang ditampilkan di sini akan menjadi URL tanpa tautan, hanya teks biasa yang dipotong
+                // Tapi karena elemennya adalah <a>, kita gunakan tautannya saja
+                resFileurl.textContent = fileUrl; // Tampilkan seluruh URL (CSS akan menangani pemotongan visual)
+                resFileurl.href = fileUrl;
+
+                // 7. Tampilkan detail box
+                resultBoxWrapper.style.display = 'block';
+                
+                // 8. Tampilkan pesan sukses
+                uploadStatusText.textContent = "File uploaded successfully!";
+                uploadStatusText.classList.add('success');
+                uploadStatusText.style.display = 'block';
+
+            } catch (error) {
+                // 9. Tampilkan pesan error
+                loadingSpinner.style.display = 'none';
+                uploadStatusText.textContent = `Error: ${error.message}`;
+                uploadStatusText.classList.add('error');
+                uploadStatusText.style.display = 'block';
+            }
+            
+            fileInput.value = null; // Tetap reset input file
+        }
+    </script>
+
+</body>
+</html>
