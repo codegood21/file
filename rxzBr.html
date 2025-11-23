@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RezWeb Unband - Cyberpunk</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #04000a;
+        font-family: 'Courier New', monospace;
+        color: #00eaff;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 700px;
+        margin: 40px auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 2px solid #00eaff;
+        background: rgba(0, 0, 30, 0.7);
+        box-shadow: 0 0 12px #00eaff;
+    }
+
+    td {
+        padding: 15px;
+        border: 1px solid #00eaff;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    input, select {
+        width: 90%;
+        padding: 10px;
+        font-size: 18px;
+        background: #0a0020;
+        border: 2px solid #00eaff;
+        color: #00eaff;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #00eaff;
+        color: #030014;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 6px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: #00bcd4;
+        box-shadow: 0 0 15px #00eaff;
+    }
+</style>
+
+<script>
+function kirimBanding() {
+    let nomor = document.getElementById("nomor").value;
+
+    if(nomor.trim() === ""){
+        alert("Masukkan nomor dulu woy!");
+        return;
+    }
+
+    // Pesan panjang + nomor otomatis
+    let body =
+    "Halo Tim WhatsApp,%0D%0A%0D%0A" +
+    "Saya ingin mengajukan permohonan banding terkait akun WhatsApp saya yang saat ini terkena pembatasan.%0D%0A" +
+    "Nomor saya: " + nomor + "%0D%0A%0D%0A" +
+    "Saya meyakini bahwa penangguhan ini terjadi karena kesalahan atau kesalahpahaman aktivitas. Saya menggunakan WhatsApp untuk komunikasi penting setiap hari.%0D%0A%0D%0A" +
+    "Saya tidak pernah bermaksud melanggar aturan dan bersedia mematuhi kebijakan WhatsApp sepenuhnya.%0D%0A%0D%0A" +
+    "Mohon bantuan untuk meninjau ulang akun saya agar dapat dipulihkan kembali.%0D%0A%0D%0A" +
+    "Terima kasih atas waktu dan bantuannya.%0D%0A";
+
+    // Kirim ke Gmail
+    window.location.href =
+        "mailto:support@whatsapp.com?subject=Banding Akun WhatsApp&body=" + body;
+}
+</script>
+
+</head>
+<body>
+
+<div class="container">
+
+    <table>
+
+        <!-- Judul -->
+        <tr>
+            <td><b>Unband</b></td>
+        </tr>
+
+        <!-- Input Nomor -->
+        <tr>
+            <td>
+                Masukan Nomor (Format +62):<br><br>
+                <input id="nomor" type="text" placeholder="+62xxxxxxxxxxx">
+            </td>
+        </tr>
+
+        <!-- Pesan Penjelasan -->
+        <tr>
+            <td>
+                "Setelah melakukan banding anda, akan diteruskan menuju Gmail tim WhatsApp."
+            </td>
+        </tr>
+
+        <!-- Pilih Fitur -->
+        <tr>
+            <td>
+                Pilih Jenis Ban:<br><br>
+                <select>
+                    <option>Ban Permanen</option>
+                    <option>Ban Spam</option>
+                </select>
+            </td>
+        </tr>
+
+        <!-- Tombol Banding -->
+        <tr>
+            <td>
+                <button class="btn" onclick="kirimBanding()">Banding</button>
+            </td>
+        </tr>
+
+        <!-- Penjelasan Ban -->
+        <tr>
+            <td>
+                <b>Ban Permanen:</b> Biasanya karena pelanggaran berat. Banding membantu meminta peninjauan ulang ulang agar akun dipulihkan.<br><br>
+                <b>Ban Spam:</b> Karena pengiriman pesan berlebihan atau dianggap mencurigakan. Banding membantu membuka blokir akun anda.
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+</body>
+</html>
