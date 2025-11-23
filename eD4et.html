@@ -1,0 +1,1219 @@
+<!Doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Unban WhatsApp — Dewaa Nizamm</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #05060a;
+    --accent: #8a2be2;
+    --accent2: #4b0082;
+    --accent3: #1e00ff;
+    --muted: #98a0b3;
+    --mono: 'Share Tech Mono', monospace;
+    --ui: 'Inter', system-ui, sans-serif;
+  }
+
+  html, body { 
+    height: 100%; 
+    margin: 0; 
+    background: linear-gradient(-45deg, #0a0015, #1a0033, #0f0022, #150033);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: #e6eef6; 
+    font-family: var(--ui); 
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .topbar { 
+    display: flex; 
+    align-items: center; 
+    background: transparent; 
+    padding: 8px 12px; 
+    position: relative;
+    z-index: 10;
+  }
+
+  .menu-btn { 
+    font-size: 22px; 
+    background: none; 
+    border: none; 
+    color: var(--accent); 
+    cursor: pointer; 
+    margin-right: 10px; 
+  }
+
+  .title-top { 
+    font-family: var(--mono); 
+    font-size: 18px; 
+    font-weight: 600; 
+    color: var(--accent); 
+  }
+
+  .sidebar { 
+    position: fixed; 
+    top: 0; 
+    left: -240px; 
+    width: 240px; 
+    height: 100%; 
+    background: linear-gradient(180deg, #0c1016 0%, #1a0b2e 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.08); 
+    padding: 60px 16px; 
+    transition: left 0.3s ease; 
+    z-index: 999; 
+    overflow-y: auto;
+  }
+
+  .sidebar ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+  }
+
+  .sidebar li { 
+    margin-bottom: 14px; 
+  }
+
+  .sidebar a { 
+    color: #e6eef6; 
+    text-decoration: none; 
+    font-size: 15px; 
+    display: flex; 
+    align-items: center; 
+    padding: 6px 4px; 
+    border-radius: 6px; 
+  }
+
+  .sidebar a i { 
+    margin-right: 8px; 
+    color: var(--accent); 
+    width: 18px; 
+    text-align: center; 
+  }
+
+  .sidebar a:hover { 
+    background: rgba(255, 255, 255, 0.05); 
+  }
+
+  .sidebar.active { 
+    left: 0; 
+  }
+
+  .submenu { 
+    display: none; 
+    list-style: none; 
+    padding-left: 20px; 
+    margin-top: 8px; 
+  }
+
+  .submenu li { 
+    margin-bottom: 10px; 
+  }
+
+  .submenu a { 
+    font-size: 14px; 
+    color: #cfd8e3; 
+  }
+
+  .submenu a i { 
+    color: var(--accent); 
+  }
+
+  .submenu.show { 
+    display: block; 
+  }
+
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+  }
+
+  .profile-container {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    box-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
+    border: 3px solid rgba(138, 43, 226, 0.4);
+  }
+
+  .profile-title {
+    font-family: var(--ui);
+    font-size: 28px;
+    font-weight: 700;
+    color: #e6eef6;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    margin: 0;
+  }
+
+  .form-label { 
+    font-size: 16px; 
+    font-weight: 600; 
+    margin: 18px 0 8px; 
+    display: block; 
+    text-align: center; 
+    width: 380px; 
+    max-width: 90vw;
+  }
+
+  .input, select, .btn { 
+    width: 380px; 
+    max-width: 90vw;
+    padding: 14px 16px; 
+    border-radius: 10px; 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    background: rgba(10, 8, 25, 0.7); 
+    color: #e6eef6; 
+    font-size: 15px; 
+    outline: none; 
+    display: block; 
+    margin: 0 auto;
+    transition: all 0.3s ease;
+  }
+
+  .input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+  }
+
+  .input::placeholder {
+    color: #a0a8b8;
+  }
+
+  .btn { 
+    margin-top: 25px; 
+    padding: 16px 18px; 
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3)); 
+    border: 0; 
+    border-radius: 12px; 
+    color: #fff; 
+    font-weight: 800; 
+    cursor: pointer; 
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+  }
+
+  .status { 
+    margin-top: 15px; 
+    font-size: 14px; 
+    color: var(--muted); 
+    min-height: 20px; 
+    width: 380px; 
+    max-width: 90vw;
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center;
+  }
+
+  .small { 
+    font-size: 13px; 
+    color: var(--muted); 
+    margin-top: 12px; 
+    width: 380px; 
+    max-width: 90vw;
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center; 
+    line-height: 1.5;
+  }
+
+  main.empty {
+    background: transparent;
+  }
+
+  .overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    background: rgba(0, 0, 0, 0.4); 
+    display: none; 
+    z-index: 998; 
+  }
+
+  .overlay.active { 
+    display: block; 
+  }
+
+  /* Background animation elements */
+  .bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(138, 43, 226, 0.1);
+    animation: float 15s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-20px) translateX(10px); }
+    50% { transform: translateY(-40px) translateX(-10px); }
+    75% { transform: translateY(-20px) translateX(10px); }
+  }
+
+  /* Page Styles */
+  .page {
+    display: none;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #e6eef6;
+    text-align: center;
+  }
+
+  .back-btn {
+    background: rgba(10, 8, 25, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e6eef6;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 200px;
+    transition: all 0.3s ease;
+  }
+
+  .back-btn:hover {
+    background: rgba(138, 43, 226, 0.2);
+    border-color: var(--accent);
+  }
+
+  /* Coming Soon Styles */
+  .coming-soon {
+    background: rgba(10, 8, 25, 0.7);
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: var(--muted);
+  }
+
+  /* Features Plus Submenu Animation */
+  .features-submenu {
+    display: none;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* responsive tweaks */
+  @media (max-width: 860px) { 
+    .main-container {
+      padding: 16px;
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+    }
+    .profile-title {
+      font-size: 24px;
+    }
+    .sidebar {
+      width: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+<!-- Background Animation -->
+<div class="bg-animation" id="bgAnimation"></div>
+
+<header class="topbar">
+  <button class="menu-btn" id="menuToggle" aria-label="Buka menu">&#9776;</button>
+  <div class="title-top">Unban WhatsApp</div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebarMenu" aria-hidden="true">
+  <ul>
+    <li><a href="#" data-page="home"><i class="fa-brands fa-whatsapp"></i> Unbanned WhatsApp</a></li>
+    
+    <li><a href="#" data-page="bands"><i class="fa-brands fa-whatsapp"></i> Bands WhatsApp</a></li>
+    
+    <li><a href="#" data-page="download"><i class="fa-solid fa-download"></i> Download</a></li>
+    
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="featuresToggle"><i class="fa-solid fa-plus"></i> Fitur + <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:12px;"></i></a>
+      <ul class="submenu features-submenu" id="featuresSubmenu">
+        <li><a href="#" data-page="anilist"><i class="fa-solid fa-tv"></i> AniList</a></li>
+        <li><a href="#" data-page="ai"><i class="fa-solid fa-robot"></i> Dewaa AI</a></li>
+      </ul>
+    </li>
+    
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="contactToggle"><i class="fa-solid fa-headset"></i> Contact Admin <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:12px;"></i></a>
+      <ul class="submenu" id="contactSubmenu">
+        <li><a href="https://wa.me/6285184110915" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+        <li><a href="https://t.me/DewaaNizammAI" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></li>
+      </ul>
+    </li>
+
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="infoToggle"><i class="fa-solid fa-newspaper"></i> Info Website Terbaru <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:12px;"></i></a>
+      <ul class="submenu" id="infoSubmenu">
+        <li><a href="https://whatsapp.com/channel/0029Vb71BN465yD702sujJ2B" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel</a></li>
+      </ul>
+    </li>
+
+    <li class="has-submenu">
+      <a href="javascript:void(0)" id="jasaToggle"><i class="fa-solid fa-code"></i> Jasa Pembuatan Web <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:12px;"></i></a>
+      <ul class="submenu" id="jasaSubmenu">
+        <li><a href="https://wa.me/6285184110915" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+        <li><a href="https://t.me/DewaaNizammAI" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+
+<!-- Home Page (Unbanned WhatsApp) -->
+<div class="page active" id="home">
+  <div class="main-container">
+    <div class="profile-container">
+      <img src="UNBAN.JPG" alt="Profile Dewaa Nizamm" class="profile-image">
+      <div class="profile-title">Unbanned WhatsApp</div>
+    </div>
+
+    <label class="form-label" for="nomor">Nomor WhatsApp yang diblokir</label>
+    <input type="tel" id="nomor" class="input" placeholder="+62xxxxxxxxxxx" inputmode="tel" aria-required="true" />
+    
+    <label class="form-label" for="alasan">Pilih Opsi Band</label>
+    <select id="alasan" class="input" aria-required="true">
+      <option value="">-- Pilih alasan --</option>
+      <option value="Opsi Spam">Opsi Spam</option>
+      <option value="Opsi Permanen">Opsi Permanen</option>
+      <option value="Opsi Permanen Batu">Opsi Permanen Batu</option>
+      <option value="Opsi Reset Otp">Opsi Reset Otp</option>
+    </select>
+    
+    <button class="btn" id="sendBtn" aria-label="Kirim Banding">KIRIM BANDING</button>
+    <div class="status" id="statusArea" aria-live="polite"></div>
+    <div class="small">Saat Tombol Ditekan: Sistem Akan Mencoba Membuka Aplikasi Gmail (Android/Ios). Silahkan Kirim Pesannya Lalu Tunggu Balasan WhatsApp Dan Trik Ini Tidak 100% Kebuka Oky Tinggal Nombor nya Saja kayak Mana.</div>
+  </div>
+</div>
+
+<!-- Bands WhatsApp Page -->
+<div class="page" id="bands">
+  <div class="main-container">
+    <div class="profile-container">
+      <img src="UNBAN.JPG" alt="Profile Dewaa Nizamm" class="profile-image">
+      <div class="profile-title">Bands WhatsApp</div>
+    </div>
+    
+    <label class="form-label" for="bandsNomor">Nomor WhatsApp yang akan di-bands</label>
+    <input type="tel" id="bandsNomor" class="input" placeholder="+62xxxxxxxxxxx" inputmode="tel" aria-required="true" />
+    
+    <label class="form-label" for="bandsVersion">Pilih Version Bands</label>
+    <select id="bandsVersion" class="input" aria-required="true">
+      <option value="">-- Pilih version --</option>
+      <option value="Bands V1">Bands V1</option>
+      <option value="Bands V2">Bands V2</option>
+      <option value="Bands V3">Bands V3</option>
+      <option value="Bands V4">Bands V4</option>
+      <option value="Bands V5">Bands V5</option>
+      <option value="Bands V6">Bands V6</option>
+      <option value="Bands V7">Bands V7</option>
+      <option value="Bands V8">Bands V8</option>
+      <option value="Bands V9">Bands V9</option>
+      <option value="Bands V10">Bands V10</option>
+    </select>
+    
+    <button class="btn" id="sendBandsBtn" aria-label="Kirim Report">KIRIM REPORT</button>
+    <div class="status" id="bandsStatusArea" aria-live="polite"></div>
+    <div class="small">Saat Tombol Ditekan: Sistem Akan Mencoba Membuka Aplikasi Gmail (Android/Ios). Silahkan Kirim Pesan ReportNya Lalu Tunggu Balasan WhatsApp Dan Trik Ini Tidak 100% Mengbans Oky.</div>
+    
+    <button class="back-btn" data-page="home">Kembali</button>
+  </div>
+</div>
+
+<!-- Download Page -->
+<div class="page" id="download">
+  <div class="main-container">
+    <div class="profile-container">
+      <img src="UNBAN.JPG" alt="Profile Dewaa Nizamm" class="profile-image">
+      <div class="profile-title">Download</div>
+    </div>
+    
+    <div class="coming-soon">
+      <i class="fa-solid fa-tools" style="font-size: 48px; margin-bottom: 20px; color: var(--accent);"></i>
+      <h3>Fitur Akan Segera Hadir</h3>
+      <p>Kami sedang mengembangkan fitur download untuk platform sosial media. Tunggu update selanjutnya!</p>
+    </div>
+    
+    <button class="back-btn" data-page="home">Kembali</button>
+  </div>
+</div>
+
+<!-- AniList Page -->
+<div class="page" id="anilist">
+  <div class="main-container">
+    <div class="profile-container">
+      <img src="UNBAN.JPG" alt="Profile Dewaa Nizamm" class="profile-image">
+      <div class="profile-title">AniList</div>
+    </div>
+    
+    <div class="coming-soon">
+      <i class="fa-solid fa-tv" style="font-size: 48px; margin-bottom: 20px; color: var(--accent);"></i>
+      <h3>Fitur Masih Dalam Tahap Pengembangan</h3>
+      <p>Fitur pencarian anime dari AniList sedang dalam pengembangan. Tunggu update selanjutnya!</p>
+    </div>
+    
+    <button class="back-btn" data-page="home">Kembali</button>
+  </div>
+</div>
+
+<!-- Dewaa AI Page -->
+<div class="page" id="ai">
+  <div class="main-container">
+    <div class="profile-container">
+      <img src="UNBAN.JPG" alt="Profile Dewaa Nizamm" class="profile-image">
+      <div class="profile-title">Dewaa AI</div>
+    </div>
+    
+    <div class="coming-soon">
+      <i class="fa-solid fa-robot" style="font-size: 48px; margin-bottom: 20px; color: var(--accent);"></i>
+      <h3>Fitur Masih Dalam Tahap Pengembangan</h3>
+      <p>Fitur AI assistant sedang dalam pengembangan. Tunggu update selanjutnya!</p>
+    </div>
+    
+    <button class="back-btn" data-page="home">Kembali</button>
+  </div>
+</div>
+
+<!-- Audio Elements -->
+<audio id="bg-music" loop>
+  <source src="UNBAN.MP3" type="audio/mpeg">
+  Browser kamu tidak mendukung audio.
+</audio>
+
+<audio id="bands-music" loop>
+  <source src="BANDS.MP3" type="audio/mpeg">
+  Browser kamu tidak mendukung audio.
+</audio>
+
+<script>
+  // Background animation
+  function createBubbles() {
+    const bgAnimation = document.getElementById('bgAnimation');
+    const bubbleCount = 15;
+    
+    for (let i = 0; i < bubbleCount; i++) {
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      
+      const size = Math.random() * 120 + 30;
+      const posX = Math.random() * 100;
+      const posY = Math.random() * 100;
+      const delay = Math.random() * 15;
+      const duration = Math.random() * 10 + 15;
+      
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${posX}%`;
+      bubble.style.top = `${posY}%`;
+      bubble.style.animationDelay = `${delay}s`;
+      bubble.style.animationDuration = `${duration}s`;
+      
+      bgAnimation.appendChild(bubble);
+    }
+  }
+
+  createBubbles();
+
+  /* ================= Existing form logic (Kirim banding) ================= */
+  const sendBtn = document.getElementById('sendBtn');
+  const statusEl = document.getElementById('statusArea');
+  const nomorInput = document.getElementById('nomor');
+  const alasanSelect = document.getElementById('alasan');
+  const bgMusic = document.getElementById('bg-music');
+
+  // Play music when option is selected
+  alasanSelect.addEventListener('change', function() {
+    if (this.value !== "") {
+      // Play the music when an option is selected
+      bgMusic.play().catch(e => {
+        console.log('Autoplay prevented:', e);
+      });
+    }
+  });
+
+  function enc(v) { return encodeURIComponent(v || ''); }
+  function isAndroid() { return /Android/i.test(navigator.userAgent); }
+  function setStatus(t) { statusEl.textContent = t; }
+  function normalizeNumber(n) { 
+    if (!n) return n; 
+    const s = n.trim().replace(/\s+/g, ''); 
+    if (/^[0][0-9]+$/.test(s)) return '62' + s.slice(1); 
+    if (/^\+/.test(s)) return s; 
+    return s; 
+  }
+
+  function buildTemplate(nomor, alasan) {
+    const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : ('+' + nomor);
+    
+    if (alasan === "Opsi Permanen Batu") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: 'Re: Hello, my WhatsApp account suddenly logged out of the WhatsApp application and was suddenly blocked.',
+        body: `Hello meta@support.com WhatsApp developer operations I am experiencing problems with my WhatsApp account which was blocked when I logged into the WhatsApp meta application and Suddenly my account was blocked, please help me to recover my official WhatsApp number (https://faq.whatsapp.com/723378546580115/?helpref=hc_fnav) please Please help support@support.whatsapp.com to recover my WhatsApp account. I have read the WhatsApp privacy article guide on the website >>  https://www.whatsapp.com/legal/privacy-policy Please help me as soon as possible to recover my blocked WhatsApp number >>[https://wa.me/+ ${tampilNomor}] thank you`
+      };
+    }
+    
+    if (alasan === "Opsi Permanen") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: 'Re: Hello, my WhatsApp account suddenly logged out of the WhatsApp application and was suddenly blocked.',
+        body: `Gentile Supporto e Amministrazione WhatsApp, Meta Operating System. Permettetemi di presentarmi. Mi chiamo Laura Pausini (cantante pop internazionale).
+Sto riscontrando un grave problema con il mio account WhatsApp, che è stato bloccato unilateralmente e permanentemente. Vorrei il vostro aiuto per risolvere il problema attuale, ovvero il blocco unilaterale e permanente dell'account. Vi prego di aiutarmi con questo account WhatsApp: https://www.whatsapp.com/legal/terms-of-service?lang=id#terms-of-service-privacy-policy-and-user-data/[${tampilNomor}]
+senza alcuna spiegazione chiara. Questo sta seriamente ostacolando le meine attività quotidiane e le mie comunicazioni.
+Vi prego di sbloccare WhatsApp immediatamente. Sono un utente WhatsApp immediatamente!! Il mio account WhatsApp è sangat penting per me per il mio lavoro e per i messaggi personali con i miei familiari più stretti. Vi prego di aiutarmi immediatamente. Grazie. Il mio numero è di nuovo [${tampilNomor}]`
+      };
+    }
+    
+    if (alasan === "Opsi Reset Otp") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: 'Re: Hello, my WhatsApp account suddenly logged out of the WhatsApp application and was suddenly blocked.',
+        body: `Администратор WhatsApp, я новый пользователь WhatsApp, я хочу подать жалобу относительно моего кода WhatsApp OTP, который не был предоставлен, код не пришел на мой мобильный телефон, и на самом деле, когда я снова прошу код, он приходит дольше, dan запрашивается следующий код. 7 часов, я установил приложение WhatsApp для своей работы, пожалуйста, помогите WhatsApp, хотя моя SIM-карта все еще активна, я очень сожалею об услуге WhatsApp как новый пользователь, и когда я только что установил приложение WhatsApp в Playstore, я думал, что это хорошее приложение и актуальное, но не так, как я себе представлял, пожалуйста, найдите мой код WhatsApp OTP как можно скорее, спасибо WhatsApp, пожалуйста, помогите немедленно, возможно, мне действительно нужен этот номер как можно скорее сейчас [${tampilNomor}].`
+      };
+    }
+    
+    // Default template for Opsi Spam
+    return {
+      to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+      subject: 'Re: Hello, my WhatsApp account suddenly logged out of the WhatsApp application and was suddenly blocked.',
+      body: `Hello WhatsApp Support Team,
+
+My name is Dewaa, and my WhatsApp number is [${tampilNomor}]. I was surprised to find that my account was blocked for spam while I was simply calling my family. I believe this was a misunderstanding, and I kindly ask the team to review and unblock my number.
+
+This number is very important for contacting my sick family and managing my work. I sincerely apologize for any unintentional mistake and promise to follow WhatsApp's Terms of Service and community guidelines. I have also read the related help articles:
+
+ [https://faq.whatsapp.com/2257017191175152?locale=id_ID](https://faq.whatsapp.com/2257017191175152?locale=id_ID)
+ [https://faq.whatsapp.com/361005896189245?locale=id_ID](https://faq.whatsapp.com/361005896189245?locale=id_ID)
+ [https://faq.whatsapp.com/1848531392146538?locale=id_ID](https://faq.whatsapp.com/1848531392146538?locale=id_ID)
+ [https://www.whatsapp.com/legal/terms-of-service](https://www.whatsapp.com/legal/terms-of-service)
+
+Please help me regain access to my number as soon as possible. Thank you very much for your understanding and support.`
+    };
+  }
+
+  function buildIntentUrl(t) {
+    return `intent://compose?to=${enc(t.to)}&subject=${enc(t.subject)}&body=${enc(t.body)}#Intent;scheme=mailto;package=com.google.android.gm;end`;
+  }
+
+  function buildMailtoUrl(t) {
+    return `mailto:${enc(t.to)}?subject=${enc(t.subject)}&body=${enc(t.body)}`;
+  }
+
+  function buildGmailWebUrl(t) {
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(t.to)}&su=${enc(t.subject)}&body=${enc(t.body)}`;
+  }
+
+  sendBtn.addEventListener('click', () => {
+    let nomor = (nomorInput.value || '').trim();
+    const alasan = (alasanSelect.value || '').trim();
+    
+    if (!nomor || !alasan) {
+      setStatus('Mohon isi nomor & pilih alasan.');
+      return;
+    }
+    
+    nomor = normalizeNumber(nomor);
+    const tpl = buildTemplate(nomor, alasan);
+    const intentUrl = buildIntentUrl(tpl), mailtoUrl = buildMailtoUrl(tpl), gmailWebUrl = buildGmailWebUrl(tpl);
+    
+    sendBtn.disabled = true; 
+    sendBtn.setAttribute('aria-busy', 'true');
+    
+    if (isAndroid()) {
+      setStatus('Mencoba membuka Gmail app...');
+      try { 
+        window.location.href = intentUrl; 
+      } catch (e) {}
+      
+      let handled = false;
+      const fallback = () => {
+        if (handled) return;
+        handled = true;
+        setStatus('Gagal buka Gmail app. Membuka email default...');
+        try { 
+          window.location.href = mailtoUrl; 
+        } catch (e) { 
+          setStatus('Gagal buka app email. Membuka Gmail web...');
+          try { 
+            window.open(gmailWebUrl, '_blank'); 
+          } catch (err) { 
+            setStatus('Gagal membuka opsi email.'); 
+          }
+        }
+        sendBtn.disabled = false; 
+        sendBtn.removeAttribute('aria-busy');
+      };
+      
+      const onVisChange = () => {
+        if (document.hidden) {
+          handled = true;
+          setStatus('Compose terbuka di aplikasi Gmail.');
+          sendBtn.disabled = false; 
+          sendBtn.removeAttribute('aria-busy');
+        }
+      };
+      
+      document.addEventListener('visibilitychange', onVisChange, { once: true });
+      setTimeout(() => { 
+        if (!handled) fallback(); 
+      }, 1200);
+    } else {
+      setStatus('Membuka aplikasi email...');
+      try {
+        window.location.href = mailtoUrl;
+        setTimeout(() => {
+          if (!document.hidden) {
+            setStatus('Jika tidak terbuka, membuka Gmail web...');
+            try { 
+              const w = window.open(gmailWebUrl, '_blank'); 
+              if (!w) setStatus('Popup diblok. Periksa aplikasi email.'); 
+            } catch (e) { 
+              setStatus('Gagal membuka Gmail web.'); 
+            }
+          }
+          sendBtn.disabled = false; 
+          sendBtn.removeAttribute('aria-busy');
+        }, 900);
+      } catch (err) {
+        setStatus('Gagal membuka aplikasi email. Membuka Gmail web...');
+        try { 
+          window.open(gmailWebUrl, '_blank'); 
+        } catch (e) { 
+          setStatus('Gagal membuka Gmail web.'); 
+        }
+        sendBtn.disabled = false; 
+        sendBtn.removeAttribute('aria-busy');
+      }
+    }
+  });
+
+  /* ================= Bands WhatsApp Function ================= */
+  const sendBandsBtn = document.getElementById('sendBandsBtn');
+  const bandsStatusEl = document.getElementById('bandsStatusArea');
+  const bandsNomorInput = document.getElementById('bandsNomor');
+  const bandsVersionSelect = document.getElementById('bandsVersion');
+  const bandsMusic = document.getElementById('bands-music');
+
+  // Play bands music when option is selected
+  bandsVersionSelect.addEventListener('change', function() {
+    if (this.value !== "") {
+      // Play the bands music when an option is selected
+      bandsMusic.play().catch(e => {
+        console.log('Autoplay prevented:', e);
+      });
+    }
+  });
+
+  function buildBandsTemplate(nomor, version) {
+    const tampilNomor = (nomor.startsWith('+') || nomor.startsWith('62')) ? nomor : ('+' + nomor);
+    const subject = 'Por favor, banee esta cuenta de WhatsApp porque es perjudicial para otros usuarios.';
+    
+    if (version === "Bands V1") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🏆💥 ¡EMPRENDE LA EXPEDICIÓN ÉPICA HACIA LA RIQUEZA CON zausgacor! 💥🏆  
+⚡ ¡Aventurero, el tesoro millonario te espera en zausgacor! ¡Únete a la misión más grande de 2025 para conquistar fortunas sin límites! 😈  
+🌍 Este no es un juego cualquiera, es una batalla por la gloria y el dinero. ¡Prepárate para dominar el mundo de las apuestas! 💰  
+
+🎰 ¿POR QUÉ zausgacor ES LA AVENTURA DEFINITIVA?  
+✅ Premios colosales: ¡Deposita 10€ y gana 1000€ + 30 giros gratis al instante! 🤑  
+✅ Jackpots explosivos: ¡Gana millones cada minuto con nuestras slots gacor!  
+✅ Retiros relámpago: Saca tu dinero en 1 SEGUNDO vía Bizum, cripto o transferencia bancaria. ⚡  
+✅ Juegos legendarios:  
+   - 🎰 Slots de élite (Pragmatic Play, PG Soft, Habanero).  
+   - 🃏 Casino en vivo (Baccarat, Ruleta, Dragon Tiger).  
+   - ♠️ Póker online de alto riesgo.  
+   - ⚽ Apuestas deportivas (fútbol, baloncesto, eSports).  
+   - 🎯 Lotería crypto 4D/3D/2D con premios épicos.  
+
+💸 BONOS QUE CAMBIAN EL JUEGO:  
+✨ 700% extra en cada depósito diario.  
+✨ Bono de bienvenida del 200% para nuevos aventureros.  
+✨ Cashback diario para seguir en la misión.  
+✨ Invita amigos y gana 500€ por cada uno.  
+✨ Eventos especiales de jackpot con premios de hasta 10 MILLONES.  
+
+🔒 SEGURIDAD MÁXIMA: Juega en modo incógnito, sin rastro, 100% anónimo.  
+📱 JUEGA DONDE QUIERAS: Compatible con PC, Android, iOS. ¡Sin lag, puro poder!  
+👩‍💻 SOPORTE 24/7: Equipo de élite disponible en chat en vivo para guiarte en la expedición.  
+
+📎 ÚNETE A LA MISIÓN AHORA:  
+📎 https://incess187.com
+📎 https://incess187.com
+📎 https://incess187.com
+
+🔍 Busca en Google: zeus  
+🔍 Busca en Google: zeus
+
+💥 ALERTA ÉPICA: ¡La misión termina en 45 MINUTOS! 😱  
+🚨 LLAMA A TODOS TUS ALIADOS: ¡Comparte en TODOS tus grupos y gana 500€ extra por cada difusión! 💸  
+📢 ¡Haz que el mundo sepa de esta expedición! ¡Más compartes, más ganas!  
+
+📲 ¿LISTO PARA LA GLORIA? Contacta al comandante: 👉 https://api.whatsapp.com/send?phone=${tampilNomor} 
+
+#zausgacorSlot #zeus #JackpotGila #SlotNaga #ExpediciónMillonaria #Riqueza2025  
+
+🧨 ¡NO ESPERES! ¡EMPIEZA TU AVENTURA Y CONQUISTA EL TESORO HOY! 🧨`
+      };
+    } else if (version === "Bands V2") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `Cześć kochanie🤤, chcę się podzielić filmem porno🍆💦, który stał się viralem w 2025 roku. Mężczyźni często oglądają go, aż się uzależnią i umrą🤤🔫. Jest tak dobry, że uzależniają się od niego🍆💦. Polecam obejrzeć go do końca🤤🍆 Jestem pewna, że uzależnisz się od tego filmu porno🍆💦. Ten film porno jest odpowiedni dla osób w wieku od 5 do 18 lat🔞🤤, pożałujesz, jeśli go nie obejrzysz~~🤤🍆.
+
+Kliknij ten link, a uzależnisz się do granic możliwości. 🤤🔞🍆💦⬇️⬇️⬇️
+https://www.ewaflcdn.site/link/jump/ws/18qun/downapp/index.html
+
+Kliknij ten link, a będziesz zachwycony. 🤤🔞🍆💦⬇️⬇️⬇️
+https://static.2u963h.com/images/xBdAf.jpg
+
+Jeśli chcesz obejrzeć więcej filmów, kliknij mój numer WhatsApp, kochanie. 🤤🍆💦💦⬇️⬇️⬇️
+https://web.whatsapp.com/telefone/send?number=${tampilNomor}
+
+Miłego oglądania i miłego dnia! Kochanie🤤🍆💦💋💋🩷🩷`
+      };
+    } else if (version === "Bands V3") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🚀 ¿Te cuesta encontrar trabajo? ¿Te cuesta ganar dinero?
+🔊 Tenemos la solución para ti 😍 👋'Hola, soy Mark Zuckerberg y ZunnOfficial 🔥 He oído que te cuesta encontrar trabajo 💼 Tengo una solución para ti.
+
+🤑' Tenemos un sitio web que es como magia 💰 ¡Solo con jugarlo puedes ganar hasta 100 millones de rupias! 🤑🔥.
+
+🗣️: ¿Cómo Zunn?
+¡Jugando en nuestro sitio web 😍🎯 puedes ganar dinero y convertirte en millonario en un día! 🔥 El dinero que ganes te ayudará a mejorar 🤑 y podrás disfrutar de un nuevo estilo de vida 🎁.
+
+🎯 Puedes obtener el dinero con solo pestañear 💥 No lleva mucho tiempo ganar dinero 💰🔥
+
+¡Y solo con jugar un poco puedes ganar hasta 200 millones de rupias! 🤑🔥. No solo dinero, también tengo muchas funciones de tragamonedas y una seguridad estricta 🔐.
+
+🗣️: ¿Cómo jugar en nuestro sitio web? 
+🎁: Registra tu cuenta eligiendo la forma de iniciar sesión, por ejemplo, desde Google, entonces elige Google 
+🎁: Sin VPN, ¡solo con tu conexión! 
+🎁: ¡Jackpot continuo! 
+🎁 ¡Maxwin hasta el fin del mundo! 
+🔊 Nuestro servidor tiene una configuración anti-trampas, lo que significa que el operador no puede engañar a los jugadores, ¡100% seguro y tenemos nuestro propio dominio 🌐!
+
+📱 Este sitio se puede jugar en cualquier lugar, sin VPN ni otras aplicaciones.
+
+🔥 ¡ESTA NOCHE HAY MUCHOS MAXWIN! ¡ÚNETE A NUESTRO GRUP {slot} 🎰
+
+🎯 Sitio de tragamonedas Gacor con retiro automático 👇
+https://www.rockpaperfishandchips.com/10-slot-server-luar-negeri-terbaik
+
+💯 SEGURO CONTRA EL FRAUDE DEL OPERADOR☑️
+
+👤 NÚMERO DEL ADMINISTRADOR DE TRAGAMONEDAS MARK 👇
+https://web.whatsapp.com/darkweb.com/telephone/enviar?número=${tampilNomor}
+
+#Rillslot🎁
+#sitiooficial🎰
+#{slot}AdminSlot🤑
+#{slot}Zuckerberg`
+      };
+    } else if (version === "Bands V4") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🔗 ENLACE DE SLOT {slot} 2025 — PARA LOS QUE TIENEN EL VALOR DE GANAR EN EL LADO OSCURO 💣
+SIN LICENCIA, SIN CONTROL, SIN PIEDAD.
+💸 Depósito desde solo €70 — Retiros de hasta €13.400++ sin verificación 🤑
+🛑 Sin KYC, sin identidad, SOLO JUEGA Y COBRA 💰
+📍 Servidor offshore en Camboya 🇰🇭 Difícil de bloquear, imposible de rastrear.
+
+⚠️ ENLACE SECRETO ➡ ${tampilNomor}
+
+🔥 PROMO ILEGAL:
+Deposita €340 y retira hasta €13.400 — sin límites, sin excusas.
+Nada de esperas, nada de filtros. Solo ganancias sucias, rápidas y reales.
+
+WINNING 303 — La ruta oculta para quienes no quieren morir pobres.
+No es para cobardes. Es para los que lo quieren TODO, AHORA.
+
+#{slot}2025
+#DineroSucioRápido
+#GananciaSinReglas`
+      };
+    } else if (version === "Bands V5") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `"GANHE GRANDE HOJE! 🎉💥
+
+Conquiste a chance de ganhar prêmios incríveis hoje mesmo jogando {slot} slots favoritos! 🎮💰
+
+- Grandes vitórias estão à sua espera!
+- Jackpot progressivo que não para de crescer!
+- Bônus e promoções incríveis todos os dias!
+
+Não perca essa oportunidade de ouro! Jogue slots agora e ganhe seus prêmios hoje! 🚀💥
+
+Resgate seu bônus agora e comece a jogar! 🎁
+
+Vamos lá, não espere mais! Jogue seus slots favoritos e ganhe prêmios incríveis hoje! 😊"
+${tampilNomor}`
+      };
+    } else if (version === "Bands V6") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `Play our newest online {slot} site 🎰💸
+
+Guaranteed Withdrawals 💯🎰
+Mark Zuckerberg has played this site, he admitted that this site is the most gacor in the world 😏🎰
+
+My online slot site is very modern and guarantees withdrawals for players on this online slot site 💯🔥😏
+
+Not an online scam site, 100% disbursed
+Capital of Rp. 10,000 can become Rp. 100,000 🤑🔥
+🎯 Jackpot waiting for you 💰
+Don't miss the lucky spin 🍀
+If you don't believe me, take a look. It's definitely a hit. 💯🔥
+This is our online slot gambling site 😏👇🎰
+🔗 ${tampilNomor}
+🎉 Win real money with one click!
+Exclusive promo: 500% bonus for you! 🤑😏
+🚫 No ID needed – play and withdraw freely! 🔥
+
+⏰ Spin today, withdraw tonight!
+🎲 Daily jackpot event! Are you the lucky one? 💥`
+      };
+    } else if (version === "Bands V7") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `👋🏻💋 Hello friends, my name is ({slot}), I am a beautiful and sexy woman from Indonesia 😍💋
+
+🥵🤤 Now I want to offer you a job as an 18+ adult film actress. You can insert your penis into my vagina. 💋🍆 It feels so good. 😍🤤
+
+💋🍆 Come work with me, you can feel the pleasure of my vagina. My vagina is very delicious, warm, white, and pink. Maybe a man like you should try this. 😘💋
+
+😘🥵 If you want to see it, click the link below and here is a photo of my very beautiful vagina. 😍🤤
+{link}
+
+💋 Rate my vagina. It's very good, isn't it? 🥰
+{link}
+
+💋 Rate my vagina, it's really good, isn't it? 🥰
+https://ibb.co/qFd84GYG
+
+💋 Rate my vagina, it's really good, isn't it? 🥰
+${tampilNomor}
+
+🍆💋 Don't forget to help share this job with your WhatsApp friends or WhatsApp groups because this is an official job opening with no age limit, and we're already collaborating with WhatsApp. 😍🤤
+
+💋🍆 Register now. It's 100% official and we're already collaborating with WhatsApp. 💋✅
+
+💋🍆 Register now. It's 100% official and we're already collaborating with WhatsApp. 💋✅
+
+💋🍆 Register now. It's 100% official and we're already collaborating with WhatsApp. 💋✅`
+      };
+    } else if (version === "Bands V8") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🇿🇦 SPIN slot & SCORE REAL {slot}🇿🇦
+
+🎰 High RTP slot fun
+
+🎁 Bonuses, Free Spins, Jackpots daily
+
+💳 EFT, SnapScan supported
+
+📱 All devices supported
+
+👉 Sign up today: {link}
+
+📲 Quer se cadastrar mas está com dúvida?
+Fica tranquilo, chefe! 😎 O admin está ONLINE e pronto para ajudar no seu cadastro AGORA mesmo 🚀🔥
+⚡ Não fique de fora, a chance de ganhar + BÔNUS DE NOVO MEMBRO já está te esperando! 💰✨
+👉 Clique direto no WhatsApp abaixo e garanta sua conta agora:
+https://api.whatsapp.com/send?phone=${tampilNomor}
+
+#CASINO #GACOR
+#SLOT ANTI AMPAS
+#BONUS UNTUK PEMAIN BARU
+#DISKON DEPO 20%
+#DEPO ANTI RUNGKAD
+#BANYAK BONUS LAINNYA`
+      };
+    } else if (version === "Bands V9") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🔥🎰 Olá, guerreiros da sorte e da emoção! Eu sou o Admin oficial da PPHOKI999, a plataforma de caça-níqueis mais GACOR de 2025 🤑💥  
+Prepare-se para ganhar vezes e vezes sem parar — aqui a sua vitória é garantida! 💯💸  
+
+💰 Bônus Insano: Deposite apenas R$ 50 e leve até R$ 500 de volta em minutos!  
+⚡ RTP 98% ativo agora – mais chances de lucro do que qualquer outro site!  
+🎁 Bônus especial para novos membros – Ganhe até R$ 1.000 de saldo extra 🤑  
+
+🎯 Jogos mais quentes:  
+🎰 Slots GACOR  
+🀄 Mahjong Luck  
+🎯 Roleta Relâmpago  
+♣️ Cartas Estratégicas  
+
+📌 100% Seguro, rápido e discreto 🔐  
+📱 Disponível no celular, tablet e PC – jogue em qualquer lugar!  
+
+🚀 Registre-se agora antes que o bônus acabe!  
+👉 ${tampilNomor} 👈  
+
+💥 Entre hoje, retire hoje mesmo! 💥  
+Não perca mais tempo — a sua maré de sorte começa aqui! 🍀🔥  
+
+#{slot}Gacor2025  
+#{slot}  
+#MaxWinGarantido  
+#CuanSemLimites`
+      };
+    } else if (version === "Bands V10") {
+      return {
+        to: 'support@support.whatsapp.com,meta@support.support.com,dukungan@support.whatsapp.com',
+        subject: subject,
+        body: `🧿 מועדון הימורים סגור רק לך. 🔥 
+👇
+🔥 Apostas anônimas com criptomoedas. 🎲 เดิมพันลับด้วยบิตคอยน์ไม่ระบุชื่อ. 🤑 Ganhe prêmios ilimitados sem cadastro! 🔗 Link sombrio para apostas rápidas.  🥶🏛
+🧨 Use this entry point to unlock massive rewards: {link}⚡️🔥
+📡 Entrada não rastreada: {link}
+📈 Aumente lucros sem limites agora. 💸 Link proibido para apostas instantâneas. 🎯 Pagos invisibles con cripto. 💣 Blackroom bets sem rastreamento.  🤑⚡️
+:
+🧨 este enlace expirará pronto:🤑😬 https://api.whatsapp.com/send?phone=${tampilNomor}
+#situshari ini😬🥶
+#{slot}gacor🤑
+#allshadow⚡️🔥`
+      };
+    }
+    
+    return null;
+  }
+
+  sendBandsBtn.addEventListener('click', () => {
+    let nomor = (bandsNomorInput.value || '').trim();
+    const version = (bandsVersionSelect.value || '').trim();
+    
+    if (!nomor || !version) {
+      bandsStatusEl.textContent = 'Mohon isi nomor & pilih version.';
+      return;
+    }
+    
+    nomor = normalizeNumber(nomor);
+    const tpl = buildBandsTemplate(nomor, version);
+    
+    if (!tpl) {
+      bandsStatusEl.textContent = 'Template tidak ditemukan.';
+      return;
+    }
+    
+    const intentUrl = buildIntentUrl(tpl), mailtoUrl = buildMailtoUrl(tpl), gmailWebUrl = buildGmailWebUrl(tpl);
+    
+    sendBandsBtn.disabled = true; 
+    sendBandsBtn.setAttribute('aria-busy', 'true');
+    
+    if (isAndroid()) {
+      bandsStatusEl.textContent = 'Mencoba membuka Gmail app...';
+      try { 
+        window.location.href = intentUrl; 
+      } catch (e) {}
+      
+      let handled = false;
+      const fallback = () => {
+        if (handled) return;
+        handled = true;
+        bandsStatusEl.textContent = 'Gagal buka Gmail app. Membuka email default...';
+        try { 
+          window.location.href = mailtoUrl; 
+        } catch (e) { 
+          bandsStatusEl.textContent = 'Gagal buka app email. Membuka Gmail web...';
+          try { 
+            window.open(gmailWebUrl, '_blank'); 
+          } catch (err) { 
+            bandsStatusEl.textContent = 'Gagal membuka opsi email.'; 
+          }
+        }
+        sendBandsBtn.disabled = false; 
+        sendBandsBtn.removeAttribute('aria-busy');
+      };
+      
+      const onVisChange = () => {
+        if (document.hidden) {
+          handled = true;
+          bandsStatusEl.textContent = 'Compose terbuka di aplikasi Gmail.';
+          sendBandsBtn.disabled = false; 
+          sendBandsBtn.removeAttribute('aria-busy');
+        }
+      };
+      
+      document.addEventListener('visibilitychange', onVisChange, { once: true });
+      setTimeout(() => { 
+        if (!handled) fallback(); 
+      }, 1200);
+    } else {
+      bandsStatusEl.textContent = 'Membuka aplikasi email...';
+      try {
+        window.location.href = mailtoUrl;
+        setTimeout(() => {
+          if (!document.hidden) {
+            bandsStatusEl.textContent = 'Jika tidak terbuka, membuka Gmail web...';
+            try { 
+              const w = window.open(gmailWebUrl, '_blank'); 
+              if (!w) bandsStatusEl.textContent = 'Popup diblok. Periksa aplikasi email.'; 
+            } catch (e) { 
+              bandsStatusEl.textContent = 'Gagal membuka Gmail web.'; 
+            }
+          }
+          sendBandsBtn.disabled = false; 
+          sendBandsBtn.removeAttribute('aria-busy');
+        }, 900);
+      } catch (err) {
+        bandsStatusEl.textContent = 'Gagal membuka aplikasi email. Membuka Gmail web...';
+        try { 
+          window.open(gmailWebUrl, '_blank'); 
+        } catch (e) { 
+          bandsStatusEl.textContent = 'Gagal membuka Gmail web.'; 
+        }
+        sendBandsBtn.disabled = false; 
+        sendBandsBtn.removeAttribute('aria-busy');
+      }
+    }
+  });
+
+  /* ================= Sidebar handlers ================= */
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('sidebarMenu').classList.toggle('active');
+    document.getElementById('overlay').classList.toggle('active');
+  });
+
+  document.getElementById('overlay').addEventListener('click', () => {
+    document.getElementById('sidebarMenu').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  });
+
+  document.getElementById('contactToggle').addEventListener('click', () => {
+    document.getElementById('contactSubmenu').classList.toggle('show');
+  });
+
+  document.getElementById('infoToggle').addEventListener('click', () => {
+    document.getElementById('infoSubmenu').classList.toggle('show');
+  });
+
+  document.getElementById('jasaToggle').addEventListener('click', () => {
+    document.getElementById('jasaSubmenu').classList.toggle('show');
+  });
+
+  document.getElementById('featuresToggle').addEventListener('click', () => {
+    document.getElementById('featuresSubmenu').classList.toggle('show');
+  });
+
+  /* ================= Page Navigation ================= */
+  const pages = document.querySelectorAll('.page');
+  const sidebarLinks = document.querySelectorAll('.sidebar a[data-page]');
+  const backButtons = document.querySelectorAll('.back-btn');
+
+  function showPage(pageId) {
+    pages.forEach(page => {
+      page.classList.remove('active');
+    });
+    document.getElementById(pageId).classList.add('active');
+    
+    // Close sidebar when navigating to a page
+    document.getElementById('sidebarMenu').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
+
+  sidebarLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const pageId = link.getAttribute('data-page');
+      showPage(pageId);
+    });
+  });
+
+  backButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const pageId = button.getAttribute('data-page');
+      showPage(pageId);
+    });
+  });
+</script>
+</body>
+</html>
