@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Scan QRCODE Personel</title>
+    <style>
+        /* CSS untuk tampilan utama */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            /* WARNA LATAR BIRU PADA GAMBAR PERTAMA */
+            background-color: #D3D3D3; 
+        }
+        .container {
+            width: 90%;
+            max-width: 450px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding-bottom: 20px;
+        }
+        
+        /* HEADER & MENU */
+        .header {
+            background-color: #ffffff;
+            padding: 15px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .header img {
+            height: 40px;
+        }
+        .menu-toggle {
+            text-decoration: none;
+            font-size: 30px; 
+            color: #333;
+            line-height: 1; 
+            display: block;
+            padding: 0 5px;
+            cursor: pointer;
+        }
+        
+        /* SIDEBAR (MENU NAVIGASI) */
+        .sidebar {
+            /* TINGGI DIATUR 50% DARI LAYAR */
+            height: 50%; 
+            width: 0;
+            position: fixed;
+            z-index: 10;
+            top: 0;
+            right: 0;
+            /* WARNA BIRU SERUPA DENGAN JUDUL KOTAK */
+            background-color: #24507B; 
+            /* MENGAKTIFKAN SCROLL BAR JIKA KONTEN MELEBIHI 50% TINGGI */
+            overflow-y: auto; 
+            overflow-x: hidden;
+            transition: 0.5s; 
+            padding-top: 60px;
+            /* TAMBAHAN ESTETIKA */
+            border-bottom-left-radius: 10px; 
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); 
+        }
+        
+        .sidebar-header {
+            padding: 15px 32px; 
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .sidebar a {
+            padding: 15px 15px 15px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #ffffff; 
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: #24507B; 
+            background-color: #f1f1f1;
+        }
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px !important;
+            margin-left: 50px;
+            color: white !important;
+            cursor: pointer;
+        }
+
+        /* --- CSS UNTUK SUB-MENU LAYANAN (TOGGLE) --- */
+        .submenu {
+            padding-left: 15px; 
+            /* WARNA BIRU LEBIH GELAP */
+            background-color: #24507B;
+            /* SEMBUNYIKAN SECARA DEFAULT */
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out; 
+        }
+        .submenu.show {
+            /* TAMPILKAN SAAT CLASS 'show' DITAMBAHKAN OLEH JAVASCRIPT */
+            max-height: 200px; 
+        }
+        .submenu a {
+            padding: 10px 15px 10px 47px;
+            font-size: 0.95em;
+        }
+        /* ---------------------------------------------- */
+
+        /* BIODATA CARD STYLING */
+        .title {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1.6em; 
+            font-weight: bold;
+            color: #333;
+        }
+        .biodata-card {
+            /* GARIS TEPI BIRU MUDA */
+            border: 4px solid #24507B;
+            border-radius: 10px;
+            margin: 0 15px 20px;
+            padding: 15px;
+            text-align: center;
+        }
+        .biodata-card h3 {
+            /* WARNA JUDUL KOTAK BIRU SAMA DENGAN GAMBAR */
+            background-color: #24507B;
+            color: white;
+            margin: -15px -15px 15px -15px;
+            padding: 10px;
+            font-size: 1.1em;
+        }
+        .photo {
+            width: 100px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border: 1px solid #333;
+            object-fit: cover;
+        }
+        .photo img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        .data-label {
+            width: 40%;
+            font-weight: bold;
+        }
+        .data-separator {
+            width: 5%;
+            text-align: center;
+        }
+        .data-value {
+            width: 55%;
+            font-weight: normal;
+        }
+        
+        /* FOOTER KEMNAKER STYLE - FONT DIKEMBALIKAN KE KECIL */
+        .footer {
+            text-align: center;
+            /* DIKEMBALIKAN KE UKURAN AWAL: 0.7em */
+            font-size: 0.7em; 
+            color: #555;
+            padding: 10px 15px 0;
+            margin-top: 10px;
+        }
+        .footer p {
+            margin: 3px 0; /* Jarak antar baris dikembalikan ke yang lebih kecil */
+        }
+        .footer-line {
+            border-top: 1px solid #eee;
+            margin: 10px 0;
+        }
+        
+        /* CSS UNTUK MEMPERBESAR LOGO K3 KEMNAKER G20 DI TENGAH BAWAH */
+        .middle-logo {
+            text-align:center; 
+            margin:20px 0;
+        }
+        .middle-logo img {
+            /* UKURAN TETAP DIPERBESAR: 280px */
+            width:280px !important; 
+            height:auto; 
+            border-radius:5px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <header class="header">
+        <img src="https://i.postimg.cc/Kz21Jsc0/logo-color.png" alt="Logo Kemnaker">
+        <a class="menu-toggle" onclick="openNav()">≡</a>
+    </header>
+    
+    <nav id="mySidebar" class="sidebar">
+        <a class="close-btn" onclick="closeNav()">×</a> 
+        <div class="sidebar-header">MENU NAVIGASI</div>
+        
+        <a href="https://temank3.kemnaker.go.id/">🏠 BERANDA</a>
+        <a href="https://temank3.kemnaker.go.id/">🚩 FLOW CHART</a>
+        
+        <a href="javascript:void(0)" id="layananToggle" onclick="toggleSubmenu()">☰ LAYANAN ▼</a>
+        
+        <div class="submenu" id="submenuLayanan">
+            <a href="https://temank3.kemnaker.go.id/" class="sub-link"> • Pengesahan Gambar Rencana (PGR)</a>
+            <a href="https://temank3.kemnaker.go.id/" class="sub-link"> • Penyelidikan Bahan (PB)</a>
+            <a href="https://temank3.kemnaker.go.id/" class="sub-link"> • Surat Keterangan K3</a>
+        </div>
+        
+        <a href="https://temank3.kemnaker.go.id/">📰 INFO & ARTIKEL</a>
+        <a href="https://temank3.kemnaker.go.id/">📚 DOKUMEN K3</a>
+        <a href="https://temank3.kemnaker.go.id/">📞 HUBUNGI KAMI</a> 
+    </nav>
+    
+    <div class="title">Hasil Scan QRCODE Personel</div>
+
+    <div class="biodata-card">
+        <h3>BIODATA PERSONEL</h3>
+
+        <div class="photo">
+            <img src="https://i.postimg.cc/T31N3t64/IMG-20251001-WA0006.jpg" alt="Foto Personel">
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Nama</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">ROBBY SAPUTRA</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Tempat & Tanggal Lahir</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">TABALONG, 20-05-2006</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Nama Instansi</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">PT KARYA BERSAMA</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Jenis Personel</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">OPERATOR</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Jenis Alat</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">FORKLIFT</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Klasifikasi</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">OP. FORKLIFT</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Kelas</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">3 (TIGA)</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">No. Registrasi</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">481143942-OPK3-LT-BMC/X/2025</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Masa Berlaku</div>
+            <div class="data-separator">:</div>
+            <div class="data-value">16 OKTOBER 2030</div>
+        </div>
+    </div>
+    
+    <div class="middle-logo">
+        <img src="https://i.postimg.cc/8536g8WF/IMG-20251129-215749.png" alt="Logo K3 Kemnaker G20">
+    </div>
+    
+    
+    <div class="footer-line"></div>
+    <div class="footer">
+        <p>Jl. Jenderal Gatot Subroto Kav. 51, Daerah Khusus Ibukota Jakarta 12750, Indonesia</p>
+        <p>Copyright © 2020-2025 Ditjen Binwasnaker & K3, Kemnaker R.I.</p>
+    </div>
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+    }
+
+    // FUNGSI UNTUK MENAMPILKAN/MENYEMBUNYIKAN SUBMENU 'LAYANAN'
+    function toggleSubmenu() {
+        const submenu = document.getElementById("submenuLayanan");
+        const toggleLink = document.getElementById("layananToggle");
+        
+        // Toggle class 'show' pada sub-menu (mengubah max-height)
+        submenu.classList.toggle("show");
+
+        // Mengubah panah (▼/▲)
+        if (submenu.classList.contains("show")) {
+            toggleLink.innerHTML = "☰ LAYANAN ▲"; // Panah ke atas saat terbuka
+        } else {
+            toggleLink.innerHTML = "☰ LAYANAN ▼"; // Panah ke bawah saat tertutup
+        }
+    }
+</script>
+</body>
+</html>
