@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cariWeb</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: #fff;
+      margin: 0;
+      padding: 15px;
+    }
+
+    /* TIMER DI POJOK KIRI */
+    #timerBox {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #1a1a1a;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      color: #00eaff;
+      font-size: 15px;
+      z-index: 1000;
+    }
+
+    /* OVERLAY MAINTENANCE */
+    #overlayBlock {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      color: #00eaff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 99999;
+      padding: 20px;
+      visibility: hidden;
+    }
+
+    /* EFEK GLITCH */
+    .glitch {
+      font-size: 26px;
+      font-weight: bold;
+      position: relative;
+      color: #00eaff;
+      animation: glitch 1s infinite;
+      text-shadow: 2px 0 #ff0066, -2px 0 #00ffee;
+    }
+
+    .glitch:before,
+    .glitch:after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0.8;
+    }
+
+    .glitch:before {
+      color: #ff0066;
+      z-index: -2;
+      animation: glitch-top 0.8s infinite;
+    }
+
+    .glitch:after {
+      color: #00ffee;
+      z-index: -1;
+      animation: glitch-bottom 0.8s infinite;
+    }
+
+    @keyframes glitch {
+      0% { transform: none; }
+      20% { transform: skew(3deg); }
+      40% { transform: skew(-3deg); }
+      60% { transform: skew(2deg); }
+      80% { transform: skew(-2deg); }
+      100% { transform: none; }
+    }
+
+    @keyframes glitch-top {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(-3px,-3px); }
+      50% { transform: translate(3px,-2px); }
+      75% { transform: translate(-2px,-1px); }
+      100% { transform: translate(0,0); }
+    }
+
+    @keyframes glitch-bottom {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(3px,2px); }
+      50% { transform: translate(-3px,3px); }
+      75% { transform: translate(2px,1px); }
+      100% { transform: translate(0,0); }
+    }
+
+    .container {
+      max-width: 480px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #00d9ff;
+    }
+
+    .box {
+      background: #1a1a1a;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #00eaff;
+    }
+
+    .desc {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #00aaff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #0088cc;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- OVERLAY -->
+  <div id="overlayBlock">
+    <div class="glitch" data-text="MAINTENANCE">
+      MOHON MAAF — WEBSITE INI SEDANG MAINTENANCE
+    </div>
+  </div>
+
+  <!-- TIMER -->
+  <div id="timerBox">Sisa waktu: <span id="timer">60</span> detik</div>
+
+  <div class="container">
+    <h1>Reza</h1>
+
+    <div class="box">
+      <div class="title">WEB DEPLOY HTML</div>
+      <div class="desc">Web untuk medeploy html agar orang lain bisa mengakses html anda.</div>
+      <a class="btn" href="https://www.clugo.my.id/">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">MPLS GENERATOR</div>
+      <div class="desc">Membuat logo otomatis hanya dengan memasukkan teks.</div>
+      <a class="btn" href="https://mpls-generator.vercel.app/">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">WEB SPAM NGL</div>
+      <div class="desc">Link palsu yang sering dikirim bot pada fitur Ask me anything.</div>
+      <a class="btn" href="https://spam-ngl-by-tenko-01.vercel.app/">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">GET SOURCE CODE</div>
+      <div class="desc">Platform sederhana untuk melihat dan mengambil source code.</div>
+      <a class="btn" href="https://source-code-generator-by-tenko-01.vercel.app/">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">TWITTER GENERATOR</div>
+      <div class="desc">Tool untuk membuat postingan Twitter otomatis.</div>
+      <a class="btn" href="https://tweeter-generator-by-tenko-01.vercel.app/">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">SC FREE</div>
+      <div class="desc">Script Crasher Free 5 SC.</div>
+      <a class="btn" href="#">Kunjungi</a>
+    </div>
+
+    <div class="box">
+      <div class="title">DESKRIPSI TAMBAHAN</div>
+      <div class="desc">
+        Semua tools di sini bukan buatan saya. Saya hanya mengumpulkannya jadi satu.
+        Sebagian besar tools berasal dari Tenko Official dan Zey Tools.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const display = document.getElementById("timer");
+    const overlay = document.getElementById("overlayBlock");
+
+    // Timer selalu reset setiap buka web
+    let endTime = Date.now() + 60000;
+
+    function lockScreen() {
+      overlay.style.visibility = "visible";
+      document.body.style.overflow = "hidden";
+    }
+
+    function updateTimer() {
+      const now = Date.now();
+      const diff = Math.floor((endTime - now) / 1000);
+
+      if (diff > 0) {
+        display.textContent = diff;
+      } else {
+        display.textContent = "0";
+        lockScreen();
+      }
+    }
+
+    setInterval(updateTimer, 500);
+  </script>
+
+</body>
+</html>
