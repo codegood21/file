@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RezaWeb</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0d0d0d;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 360px;
+      background: #141414;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.07);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0a84ff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      color: white;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #006ddd;
+    }
+
+    .toggle {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #5fa8ff;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <h2>Login</h2>
+      <input type="text" id="loginUser" placeholder="Username">
+      <input type="password" id="loginPass" placeholder="Password">
+      <button onclick="login()">Masuk</button>
+      <div class="toggle" onclick="showRegister()">Belum punya akun? Daftar</div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="hidden">
+      <h2>Daftar Akun</h2>
+      <input type="text" id="regUser" placeholder="Username">
+      <input type="password" id="regPass" placeholder="Password">
+      <button onclick="register()">Buat Akun</button>
+      <div class="toggle" onclick="showLogin()">Sudah punya akun? Login</div>
+    </div>
+
+  </div>
+
+<script>
+  function showRegister() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("registerBox").classList.remove("hidden");
+  }
+
+  function showLogin() {
+    document.getElementById("registerBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+  }
+
+  function register() {
+    const u = document.getElementById("regUser").value;
+    const p = document.getElementById("regPass").value;
+
+    if (!u || !p) return alert("Isi semua data!");
+
+    localStorage.setItem("user", u);
+    localStorage.setItem("pass", p);
+    alert("Akun berhasil dibuat, silakan login!");
+    showLogin();
+  }
+
+  function login() {
+    const u = document.getElementById("loginUser").value;
+    const p = document.getElementById("loginPass").value;
+
+    const savedU = localStorage.getItem("user");
+    const savedP = localStorage.getItem("pass");
+
+    if (u === savedU && p === savedP) {
+      alert("Login berhasil!");
+      window.location.href = "https://files.clugx.my.id/dcj56.html";
+    } else {
+      alert("Username/Password salah!");
+    }
+  }
+</script>
+
+</body>
+</html>
