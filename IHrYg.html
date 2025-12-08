@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Idictive Core - Quantum Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00F0FF; /* Cyber Cyan */
+      --secondary: #FF0055; /* Neon Pink */
+      --bg-dark: #050508;
+      --glass: rgba(20, 25, 35, 0.6);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--bg-dark);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* === BACKGROUND LAYERS === */
+    
+    /* 1. Gradient Aurora Blob */
+    .bg-blob {
+      position: absolute;
+      width: 120vw;
+      height: 120vw;
+      background: radial-gradient(circle, 
+        rgba(0, 240, 255, 0.15) 0%, 
+        rgba(255, 0, 85, 0.1) 40%, 
+        transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulseBlob 10s ease-in-out infinite alternate;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* 2. Cyber Grid (CSS Only - Ringan) */
+    .bg-grid {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%; left: -50%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      transform: perspective(500px) rotateX(60deg);
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes pulseBlob { 0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); } }
+    @keyframes gridMove { 0% { transform: perspective(500px) rotateX(60deg) translateY(0); } 100% { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
+
+    /* Canvas Partikel */
+    canvas { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
+
+    /* === LOGIN CARD === */
+    .login-card {
+      position: relative;
+      z-index: 10;
+      width: 90%;
+      max-width: 400px;
+      padding: 40px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      overflow: hidden;
+      /* Animasi Masuk */
+      opacity: 0;
+      transform: translateY(30px);
+      animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    /* Gradient Border Animation */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+      animation: shimmer 3s infinite linear;
+    }
+
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* === CONTENT STYLING === */
+    
+    .logo-container {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+    }
+
+    .logo-img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2);
+      padding: 4px;
+    }
+
+    .logo-glow {
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed var(--primary);
+      animation: rotateRing 10s linear infinite;
+    }
+
+    @keyframes rotateRing { to { transform: rotate(360deg); } }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      text-align: center;
+      margin-bottom: 5px;
+      background: linear-gradient(to right, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #8899a6;
+      margin-bottom: 35px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* === FORM & INPUTS === */
+    .input-group { position: relative; margin-bottom: 25px; }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-left: 5px;
+    }
+
+    .input-wrapper { position: relative; }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      font-size: 16px;
+      transition: 0.3s ease;
+      z-index: 2;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 20px 16px 50px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 16px; /* 16px prevents zoom on iOS */
+      font-weight: 500;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    input:focus + i { color: var(--primary); transform: translateY(-50%) scale(1.2); }
+    
+    /* Password field focus color change */
+    #key:focus { border-color: var(--secondary); box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); }
+    #key:focus + i { color: var(--secondary); }
+
+    /* === BUTTON === */
+    .btn-login {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+      box-shadow: 0 10px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-login:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255, 0, 85, 0.3); }
+    .btn-login:hover::before { left: 100%; }
+    .btn-login:active { transform: scale(0.98); }
+
+    .loader {
+      display: none;
+      width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%; border-top-color: #fff;
+      animation: spin 0.8s linear infinite; margin: 0 auto;
+    }
+
+    /* Error Message */
+    .error-message {
+      display: none;
+      background: rgba(255, 0, 85, 0.1);
+      border: 1px solid rgba(255, 0, 85, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #ff6b9d;
+      animation: slideUp 0.5s ease;
+    }
+
+    .error-message i {
+      margin-right: 8px;
+    }
+
+    /* === FOOTER === */
+    .footer { margin-top: 30px; text-align: center; font-size: 13px; }
+    .footer a {
+      color: #888; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: 0.3s; padding: 8px 16px; border-radius: 20px; border: 1px solid transparent;
+    }
+    .footer a:hover { color: #fff; border-color: var(--border); background: rgba(255,255,255,0.05); }
+
+    /* === STAGGER ANIMATION DELAYS === */
+    .logo-container { animation: slideUp 0.6s 0.1s backwards; }
+    h1, .subtitle { animation: slideUp 0.6s 0.2s backwards; }
+    .input-group:nth-child(1) { animation: slideUp 0.6s 0.3s backwards; }
+    .input-group:nth-child(2) { animation: slideUp 0.6s 0.4s backwards; }
+    .btn-login { animation: slideUp 0.6s 0.5s backwards; }
+    .footer { animation: slideUp 0.6s 0.6s backwards; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* === MOBILE RESPONSIVE === */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+        width: 88%;
+      }
+      h1 { font-size: 22px; }
+      .subtitle { font-size: 12px; margin-bottom: 25px; }
+      .logo-container { width: 70px; height: 70px; margin-bottom: 15px; }
+      input { padding: 14px 15px 14px 45px; font-size: 14px; }
+      .input-wrapper i { left: 15px; font-size: 14px; }
+      .btn-login { padding: 15px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blob"></div>
+  <div class="bg-grid"></div>
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="login-card">
+    
+    <div class="logo-container">
+      <div class="logo-glow"></div>
+      <img src="https://files.catbox.moe/kzl42l.jpg" alt="Core Avatar" class="logo-img">
+    </div>
+
+    <h1>IDICTIVE CORE</h1>
+    <p class="subtitle">System Access v5.01</p>
+
+    <!-- Error Message Container -->
+    <div class="error-message" id="errorMessage">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span id="errorText">Invalid username or key!</span>
+    </div>
+
+    <form id="loginForm" method="POST" action="/auth">
+      <div class="input-group">
+        <label>Identity</label>
+        <div class="input-wrapper">
+          <input type="text" name="username" placeholder="Username / Agent ID" required autocomplete="off" autofocus>
+          <i class="fas fa-user-astronaut"></i>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Security Protocol</label>
+        <div class="input-wrapper">
+          <input type="password" name="key" id="key" placeholder="Access Key" required>
+          <i class="fas fa-shield-halved"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-login">
+        <span id="btnText">INITIATE CONNECTION</span>
+        <div class="loader" id="loader"></div>
+      </button>
+
+      <div class="footer">
+        <a href="https://t.me/apasehh0" target="_blank">
+          <i class="fab fa-telegram"></i> Get Premium Access
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // === PARTICLE SYSTEM ===
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let w, h;
+    let particles = [];
+    
+    // Resize Handling
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      initParticles();
+    }
+    
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      
+      reset() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 2;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.life = Math.random() * 0.5 + 0.5; // Opacity
+        this.color = Math.random() > 0.5 ? '#00F0FF' : '#FF0055';
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        if (this.x < 0 || this.x > w || this.y < 0 || this.y > h) {
+          this.reset();
+        }
+      }
+      
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.life;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+      }
+    }
+    
+    function initParticles() {
+      particles = [];
+      // Jumlah partikel sedikit saja biar ringan
+      const count = window.innerWidth < 480 ? 40 : 80; 
+      for(let i=0; i<count; i++) particles.push(new Particle());
+    }
+    
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    
+    window.addEventListener('resize', resize);
+    resize();
+    animate();
+
+    // === LOGIN INTERACTION ===
+    const form = document.getElementById('loginForm');
+    const btn = document.querySelector('.btn-login');
+    const btnText = document.getElementById('btnText');
+    const loader = document.getElementById('loader');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+
+    // Check URL for error messages
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorMsg = urlParams.get('msg');
+    
+    if (errorMsg) {
+      errorText.textContent = decodeURIComponent(errorMsg);
+      errorMessage.style.display = 'block';
+      
+      // Auto hide error after 5 seconds
+      setTimeout(() => {
+        errorMessage.style.display = 'none';
+      }, 5000);
+    }
+
+    // Save username to localStorage for convenience
+    const usernameInput = document.querySelector('input[name="username"]');
+    const savedUsername = localStorage.getItem('indictive_username');
+    if (savedUsername) {
+      usernameInput.value = savedUsername;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Hide error message
+      errorMessage.style.display = 'none';
+      
+      // Get form data
+      const username = usernameInput.value.trim();
+      const key = document.getElementById('key').value.trim();
+      
+      // Validate inputs
+      if (!username || !key) {
+        showError('Please fill in both username and key!');
+        return;
+      }
+      
+      // Save username to localStorage
+      localStorage.setItem('indictive_username', username);
+      
+      // Loading State
+      btn.disabled = true;
+      btn.style.opacity = '0.8';
+      btn.style.pointerEvents = 'none';
+      btnText.style.display = 'none';
+      loader.style.display = 'block';
+      
+      try {
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('key', key);
+        
+        // Send POST request
+        const response = await fetch('/auth', {
+          method: 'POST',
+          body: new URLSearchParams({
+            username: username,
+            key: key
+          }),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        
+        // Check response
+        if (response.redirected) {
+          // Success - redirect to dashboard
+          window.location.href = response.url;
+          return;
+        }
+        
+        // If not redirected, there was an error
+        const responseText = await response.text();
+        
+        // Try to parse HTML for error message
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = responseText;
+        
+        // Look for error messages
+        let error = 'Invalid username or key!';
+        
+        // Check for meta refresh (redirect back to login)
+        const metaRefresh = tempDiv.querySelector('meta[http-equiv="refresh"]');
+        if (metaRefresh) {
+          const content = metaRefresh.getAttribute('content');
+          const match = content.match(/msg=([^&]+)/);
+          if (match) {
+            error = decodeURIComponent(match[1].replace(/\+/g, ' '));
+          }
+        }
+        
+        // Check for URL in response text
+        const urlMatch = responseText.match(/login\?msg=([^"]+)/);
+        if (urlMatch) {
+          error = decodeURIComponent(urlMatch[1].replace(/\+/g, ' '));
+        }
+        
+        showError(error);
+        
+      } catch (error) {
+        console.error('Login error:', error);
+        showError('Network error. Please check your connection.');
+      } finally {
+        // Reset button
+        resetButton();
+      }
+    });
+    
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.style.display = 'block';
+      
+      // Animate error message
+      errorMessage.style.animation = 'none';
+      setTimeout(() => {
+        errorMessage.style.animation = 'slideUp 0.5s ease';
+      }, 10);
+      
+      // Auto hide after 5 seconds
+      setTimeout(() => {
+        if (errorMessage.style.display === 'block') {
+          errorMessage.style.display = 'none';
+        }
+      }, 5000);
+    }
+    
+    function resetButton() {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+      btnText.style.display = 'block';
+      loader.style.display = 'none';
+    }
+    
+    // Enter key to submit
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !btn.disabled) {
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+    
+    // Auto-focus on key input if username is already filled
+    if (usernameInput.value.trim()) {
+      document.getElementById('key').focus();
+    }
+  </script>
+</body>
+</html>
