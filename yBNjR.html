@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Background Only</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(
+        circle at top,
+        #00ffd5 0%,
+        #0a0f1f 40%,
+        #05070f 100%
+    );
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Neon glow moving */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(0,255,213,0.15),
+        transparent
+    );
+    animation: glowMove 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes glowMove {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 420px;
+    background: rgba(10,15,31,0.65);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 25px;
+    border: 1px solid rgba(0,255,213,0.3);
+    box-shadow: 0 0 25px rgba(0,255,213,0.25);
+}
+
+/* Text above button */
+.label {
+    color: #9fffee;
+    font-size: 14px;
+    margin-bottom: 6px;
+    margin-top: 14px;
+}
+
+/* Button */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    background: linear-gradient(135deg, #00ffd5, #00bfa5);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(0,255,213,0.8);
+    transition: transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* WhatsApp section */
+.wa-title {
+    text-align: center;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #00ffd5;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.wa-btn {
+    background: linear-gradient(135deg, #25D366, #1ebe5d);
+    color: #000;
+    box-shadow: 0 0 15px rgba(37,211,102,0.8);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- TOMBOL 1 -->
+    <div class="label">VGK FREE BULE</div>
+    <a href="#" class="btn">DOWNLOAD</a>
+
+    <!-- TOMBOL 2 -->
+    <div class="label">VGK FREE LOKAL</div>
+    <a href="#" class="btn">DOWNLOAD</a>
+
+    <!-- TOMBOL 3 -->
+    <div class="label">VGK FREE CHINA</div>
+    <a href="#" class="btn">DOWNLOAD</a>
+
+    <!-- TOMBOL 4 -->
+    <div class="label">VGK FREE KIDS</div>
+    <a href="#" class="btn">NO ACCES</a>
+
+    <!-- TOMBOL 5 -->
+    <div class="label">VGK FREE RANDOM</div>
+    <a href="#" class="btn">NO ACCES</a>
+
+    <!-- WHATSAPP -->
+    <div class="wa-title">Hubungi WhatsApp</div>
+    <a href="https://wa.me/6283116920767" class="btn wa-btn">
+        Hubungi Langsung
+    </a>
+
+</div>
+
+</body>
+</html>
