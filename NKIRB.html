@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebReza - YT Thumbnail Downloader</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif
+}
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(circle at top left,#ff0033 0%,transparent 40%),
+        radial-gradient(circle at bottom right,#ff0055 0%,transparent 40%),
+        #020617;
+    color:#fff
+}
+.container{
+    width:100%;
+    max-width:450px;
+    padding:20px
+}
+.title{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:15px;
+    letter-spacing:1px;
+    color:#ff0033;
+    text-shadow:0 0 15px rgba(255,0,51,.7)
+}
+.box{
+    background:rgba(0,0,0,.7);
+    padding:25px;
+    border-radius:16px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(255,0,51,.4)
+}
+input{
+    width:100%;
+    padding:13px;
+    border-radius:10px;
+    border:none;
+    margin-bottom:14px;
+    outline:none;
+    font-size:15px
+}
+button{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg,#ff0000,#cc0000);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.35s;
+    margin-bottom:10px;
+    box-shadow:0 8px 20px rgba(255,0,0,.45)
+}
+button:hover{
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 12px 30px rgba(255,0,0,.7)
+}
+button:active{
+    transform:scale(.96)
+}
+img{
+    margin-top:15px;
+    max-width:100%;
+    border-radius:12px;
+    display:none;
+    box-shadow:0 0 25px rgba(255,0,51,.6)
+}
+.table-box{
+    margin-top:18px;
+    background:rgba(255,255,255,.06);
+    border-radius:12px;
+    overflow:hidden
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px
+}
+td{
+    padding:10px;
+    border-bottom:1px solid rgba(255,255,255,.1)
+}
+td:first-child{
+    color:#ff0033;
+    font-weight:600
+}
+.whatsapp{
+    text-align:center;
+    margin-top:12px;
+    font-size:14px
+}
+.whatsapp a{
+    color:#25D366;
+    text-decoration:none;
+    font-weight:600
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="title">WebReza</div>
+
+    <div class="box">
+        <h3>YT Thumbnail Auto Download</h3>
+
+        <input id="ytUrl" placeholder="Paste link YouTube">
+
+        <button onclick="ambil()">Ambil Thumbnail</button>
+
+        <button onclick="download()" id="btnDl" style="display:none">
+            Download Otomatis
+        </button>
+
+        <img id="thumb">
+
+        <div class="table-box">
+            <table>
+                <tr>
+                    <td>Fitur</td>
+                    <td>Thumbnail YouTube</td>
+                </tr>
+                <tr>
+                    <td>Kualitas</td>
+                    <td>HD Original</td>
+                </tr>
+                <tr>
+                    <td>Download</td>
+                    <td>Otomatis</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="whatsapp">
+            Hubungi WhatsApp :
+            <a href="https://wa.me/6283116920767" target="_blank">
+                0831-1692-0767
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let thumbUrl = "";
+let videoId = "";
+
+async function ambil(){
+    const url = document.getElementById("ytUrl").value.trim();
+    if(!url){
+        alert("Masukin link YouTube!");
+        return;
+    }
+
+    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/);
+    videoId = match ? match[1] : "thumbnail";
+
+    try{
+        const api = "https://noembed.com/embed?url=" + encodeURIComponent(url);
+        const res = await fetch(api);
+        const data = await res.json();
+
+        if(!data.thumbnail_url){
+            alert("Thumbnail tidak ditemukan!");
+            return;
+        }
+
+        thumbUrl = data.thumbnail_url;
+
+        const img = document.getElementById("thumb");
+        img.src = thumbUrl;
+        img.style.display = "block";
+
+        document.getElementById("btnDl").style.display = "block";
+
+    }catch(e){
+        alert("API error");
+    }
+}
+
+async function download(){
+    const res = await fetch(thumbUrl);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "YT-Thumbnail-" + videoId + ".jpg";
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
